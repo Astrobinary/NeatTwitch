@@ -17,7 +17,13 @@ import Footer from "./components/Footer/Footer";
 import _Game from "./components/GameSection/gamesection";
 import _Streamer from "./components/StreamerSection/streamersection";
 
-const store = createStore(AppReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(thunk));
+let store;
+
+if (process.env.NODE_ENV === "production") {
+	store = createStore(AppReducer, applyMiddleware(thunk));
+} else {
+	store = createStore(AppReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(thunk));
+}
 
 const App = () => (
 	<Router>

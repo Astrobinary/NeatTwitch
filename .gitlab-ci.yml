@@ -15,5 +15,5 @@ deploy-prod:
   script:
     - yarn
     - yarn run build
-    - firebase use liveclips --token $FIREBASE_TOKEN
+    - firebase use liveclips-2b478 --token $FIREBASE_TOKEN
     - firebase deploy --only hosting -m "Pipe $CI_PIPELINE_ID Build $CI_BUILD_ID" --token $FIREBASE_TOKEN

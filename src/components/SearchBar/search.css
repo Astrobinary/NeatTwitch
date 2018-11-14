@@ -1,0 +1,42 @@
+.Search {
+	display: flex;
+	text-align: center;
+	line-height: 50px;
+	color: white;
+	text-decoration: none;
+	align-items: center;
+	margin: 25px 0;
+}
+
+.Search > input {
+	background-color: rgba(66, 79, 99, 0.3);
+	border: 2px solid transparent;
+	width: 300px;
+	height: 25px;
+	color: white;
+	padding: 0 5px;
+	letter-spacing: 1px;
+	font-weight: bold;
+}
+
+.Search > input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+	letter-spacing: 1px;
+	font-weight: bold;
+}
+
+.Search > input:focus {
+	outline: none;
+	border: 2px solid #0fa5a5;
+}
+
+.Search > img {
+	margin-right: 10px;
+	width: 20px;
+	height: 20px;
+}
+
+streamers-options {
+	display: flex;
+	flex-direction: row;
+}

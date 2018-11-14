@@ -1,0 +1,19 @@
+body {
+	margin: 0;
+	background-image: url("./background-min.jpg");
+	background-attachment: fixed;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-color: #3572af;
+	font-family: "Montserrat", sans-serif;
+}
+
+.App {
+	width: 85%;
+	margin: 0 auto;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}

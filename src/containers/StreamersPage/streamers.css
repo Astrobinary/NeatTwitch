@@ -1,0 +1,117 @@
+.Streamers {
+	text-align: center;
+}
+
+.streamer-container {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.streamer-container:after {
+	content: "";
+	flex: auto;
+}
+
+.streamer-item {
+	display: flex;
+	flex-direction: column;
+	margin: 0 25px 35px 0;
+}
+
+.streamer-item > img {
+	border: 3px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0px 0px 25px -5px rgba(0, 0, 0, 0.75);
+	transition: all 0.3s ease;
+	border-radius: 5px;
+}
+
+.streamer-item > img:hover {
+	border: 3px solid #0fa5a5;
+	cursor: pointer;
+}
+
+.streamer-name {
+	margin-top: -33px;
+	width: 150px;
+	margin-left: 3px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	height: 30px;
+	line-height: 30px;
+	color: white;
+	font-weight: bold;
+}
+
+.streamers-options {
+	display: flex;
+	flex-direction: row;
+	margin: 20px 0;
+	color: white;
+	line-height: 25px;
+	letter-spacing: 1px;
+}
+
+.streamers-options > .options-choice {
+	border-bottom: 3px solid #0fa5a5;
+	font-size: 18px;
+	cursor: pointer;
+	text-transform: uppercase;
+	z-index: 100;
+}
+
+.streamers-options > span {
+	margin-right: 10px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.streamers-options > img {
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+}
+
+.streamers-options > span > input {
+	background-color: transparent;
+	border: none;
+	border-bottom: 3px solid #0fa5a5;
+	color: white;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 18px;
+	letter-spacing: 1px;
+	width: 150px;
+}
+
+.streamers-options > span > input::placeholder {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 14px;
+	letter-spacing: 1px;
+}
+
+.streamers-options > span > input:focus {
+	border: none;
+	outline: none;
+	border-bottom: 3px solid #0fa5a5;
+}
+
+.menu {
+	position: absolute;
+	background: #61729af7;
+	display: -ms-flexbox;
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	margin-left: 90px;
+	font-size: 14px;
+	margin-top: 25px;
+	border-top: 3px solid #3ba3ab;
+}
+
+.menu > span:hover {
+	color: #0fa5a5;
+	cursor: pointer;
+}

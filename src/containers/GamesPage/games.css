@@ -1,0 +1,38 @@
+/* 
+Blue Highlight: #0fa5a5 
+Pink Highlight: #ed4f74
+*/
+
+.Games {
+	text-align: center;
+}
+
+.games-container {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.games-container:after {
+	content: "";
+	flex: auto;
+}
+
+.games-item {
+	display: flex;
+	flex-direction: column;
+	margin: 0 25px 35px 0;
+}
+
+.games-item > img {
+	border: 3px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0px 0px 25px -5px rgba(0, 0, 0, 0.75);
+	border-radius: 5px;
+}
+
+.games-item > img:hover {
+	border: 3px solid #0fa5a5;
+	cursor: pointer;
+}

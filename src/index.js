@@ -23,7 +23,7 @@ let store;
 if (process.env.NODE_ENV === "production") {
 	store = createStore(AppReducer, applyMiddleware(thunk));
 } else {
-	store = createStore(AppReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(thunk));
+	store = createStore(AppReducer, applyMiddleware(thunk));
 }
 
 const App = () => (

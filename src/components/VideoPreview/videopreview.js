@@ -25,7 +25,7 @@ class videopreview extends Component {
 	onChange() {}
 
 	render() {
-		let image = <Img className="clip-thumb" alt="preview" src={[this.props.video.thumbnails.small, missingPreview]} loader={<img src={missingPreview} />} />;
+		let image = <Img className="clip-thumb" alt="preview" src={[this.props.video.thumbnails.small, missingPreview]} loader={<img alt="missing" src={missingPreview} />} />;
 
 		return (
 			<div className="clips-item" onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>

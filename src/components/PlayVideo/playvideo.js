@@ -26,8 +26,6 @@ class playvideo extends Component {
 	}
 
 	render() {
-		let title = this.props.location.state.video.title;
-		console.log(this.state.src);
 		return (
 			<section className="playvideo">
 				<Player playsInline src={this.state.src} width={900} fluid={false} autoPlay>

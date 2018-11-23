@@ -8,11 +8,11 @@ class Nav extends Component {
 	render() {
 		return (
 			<nav className="Navagation">
-				<Link className="nav-logo" to="/">
-					LIVECLIPS
+				<Link className="nav-logo" to="/feed">
+					NEAT TWITCH
 				</Link>
 
-				<NavLink activeClassName="selected" className="nav-item" exact to="/">
+				<NavLink activeClassName="selected" className="nav-item" exact to="/feed">
 					feed
 				</NavLink>
 

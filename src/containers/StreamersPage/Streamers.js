@@ -14,8 +14,8 @@ class Streamers extends Component {
 
 		this.state = {
 			showMenu: false,
-			menuItems: ["followed", "featured"],
-			currntMenu: "live"
+			menuItems: ["youtube", "followed"],
+			currntMenu: "twitch"
 		};
 	}
 
@@ -75,10 +75,6 @@ class Streamers extends Component {
 						{this.state.currntMenu}
 					</span>
 					<span>STREAMERS</span>
-					<span>OR SEARCH</span>
-					<span>
-						<input placeholder="FOR STREAMER..." />
-					</span>
 				</div>
 
 				<section id="sc" className="streamer-container">

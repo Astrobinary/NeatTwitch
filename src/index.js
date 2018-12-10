@@ -1,10 +1,54 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import "./global.scss";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
+import AppReducer from "./redux/reducers";
+
+import Feed from "./pages/Feed";
+
+import Streamers from "./pages/Streamers";
+
+import _Videos from "./components/videoList";
+import _PlayVideo from "./components/videoplayer";
+
+import Navagation from "./components/navigation";
+
+import * as serviceWorker from "./serviceWorker";
+
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+let store = createStore(AppReducer, composeEnhancer(applyMiddleware(thunk)));
+
+// createStore(AppReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(thunk));
+
+const Index = () => (
+  <Router>
+    <Provider store={store}>
+      <div className="App">
+        <Navagation />
+        <Switch>
+          <Redirect from="/" exact to="/feed" />
+          <Route exact path="/feed" component={Feed} />
+          {/* <Route exact path="/feed/:videoID" component={_PlayVideo} /> */}
+
+          <Route exact path="/streamers" component={Streamers} />
+          <Route exact path="/streamers/:streamerID" component={_Videos} />
+          <Route exact path="/streamers/:streamerID/:videoID" component={_PlayVideo} />
+
+          {/* <Route exact path="/games" component={Games} />
+          <Route exact path="/games/:gameID" component={_Game} />
+          <Route exact path="/games/:gameID/:videoID" component={_PlayVideo} /> */}
+        </Switch>
+        {/* <Footer /> */}
+      </div>
+    </Provider>
+  </Router>
+);
+
+ReactDOM.render(<Index />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

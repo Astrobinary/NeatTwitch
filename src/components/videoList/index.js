@@ -15,7 +15,6 @@ class videoList extends Component {
 		super(props);
 
 		let current = JSON.parse(localStorage.getItem("_currentSelection"));
-		console.log(current);
 		if (current === undefined || current === null) {
 			current = "week";
 		} else {
@@ -29,13 +28,11 @@ class videoList extends Component {
 	}
 
 	componentWillMount() {
-		console.log(this.props.match.params);
 
 		if (this.props.match.params.streamerID) {
 			if (this.props.channel === undefined) this.props.fetchChannel(this.props.match.params.streamerID, this.state.currentSelection, "channel");
 		}
 		if (this.props.match.params.gameID) {
-			console.log("SEARCH GAME");
 			if (this.props.channel === undefined) this.props.fetchChannel(this.props.match.params.gameID, this.state.currentSelection, "game");
 		}
 	}
@@ -51,14 +48,11 @@ class videoList extends Component {
 			if (this.props.channel[time] === undefined) this.props.fetchChannel(this.props.match.params.streamerID, time, "channel");
 		}
 		if (this.props.match.params.gameID) {
-			console.log("SEARCH GAME");
 			if (this.props.channel[time] === undefined) this.props.fetchChannel(this.props.match.params.gameID, time, "game");
 		}
 	};
 
 	getClips = () => {
-		console.log("hree");
-
 		return this.props.channel[this.state.currentSelection].map((x, index, arr) => (
 			<Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
 				<VideoPreview video={x} />
@@ -107,7 +101,6 @@ class videoList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	let key = Object.keys(ownProps.match.params)[0];
-	console.log(state);
 	return {
 		channel: state.streamers[ownProps.match.params[key]],
 		loading: state.streamers.loading,

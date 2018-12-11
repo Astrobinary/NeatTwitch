@@ -11,9 +11,11 @@ import AppReducer from "./redux/reducers";
 import Feed from "./pages/Feed";
 
 import Streamers from "./pages/Streamers";
+import Games from "./pages/Games";
 
 import _Videos from "./components/videoList";
-import _PlayVideo from "./components/videoplayer";
+import _PlayVideoList from "./components/videoplayerlist";
+import _PlayVideoSingle from "./components/videoplayersingle";
 
 import Navagation from "./components/navigation";
 
@@ -25,27 +27,30 @@ let store = createStore(AppReducer, composeEnhancer(applyMiddleware(thunk)));
 // createStore(AppReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), applyMiddleware(thunk));
 
 const Index = () => (
-  <Router>
-    <Provider store={store}>
-      <div className="App">
-        <Navagation />
-        <Switch>
-          <Redirect from="/" exact to="/feed" />
-          <Route exact path="/feed" component={Feed} />
-          {/* <Route exact path="/feed/:videoID" component={_PlayVideo} /> */}
+	<Router>
+		<Provider store={store}>
+			<div className="App">
+				<Navagation />
+				<Switch>
+					<Redirect from="/" exact to="/feed" />
 
-          <Route exact path="/streamers" component={Streamers} />
-          <Route exact path="/streamers/:streamerID" component={_Videos} />
-          <Route exact path="/streamers/:streamerID/:videoID" component={_PlayVideo} />
+					<Route exact path="/feed" component={Feed} />
+					{/* <Route exact path="/feed/:videoID" component={_PlayVideo} /> */}
 
-          {/* <Route exact path="/games" component={Games} />
-          <Route exact path="/games/:gameID" component={_Game} />
-          <Route exact path="/games/:gameID/:videoID" component={_PlayVideo} /> */}
-        </Switch>
-        {/* <Footer /> */}
-      </div>
-    </Provider>
-  </Router>
+					<Route exact path="/streamers" component={Streamers} />
+					<Route exact path="/streamers/:streamerID" component={_Videos} />
+					<Route exact path="/streamers/:streamerID/:videoID" component={_PlayVideoList} />
+
+					<Route exact path="/games" component={Games} />
+					<Route exact path="/games/:gameID" component={_Videos} />
+					<Route exact path="/games/:gameID/:videoID" component={_PlayVideoList} />
+
+					<Route exact path="/:videoID" component={_PlayVideoSingle} />
+				</Switch>
+				{/* <Footer /> */}
+			</div>
+		</Provider>
+	</Router>
 );
 
 ReactDOM.render(<Index />, document.getElementById("root"));

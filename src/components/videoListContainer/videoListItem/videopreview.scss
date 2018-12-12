@@ -1,0 +1,88 @@
+.clips-item {
+	display: flex;
+	flex-direction: column;
+	transition: all 0.5s ease;
+	height: 175px;
+	padding: 0px 5px;
+	padding-bottom: 25px;
+}
+
+.clip-thumb {
+	border: 3px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0px 0px 25px -5px rgba(0, 0, 0, 0.75);
+	transition: all 0.3s ease;
+	height: 100%;
+}
+
+.clips-item > img:hover {
+	border: 3px solid #0fa5a5;
+	cursor: pointer;
+}
+
+.clip-name > img:hover {
+	border: 3px solid #0fa5a5;
+	cursor: pointer;
+}
+
+.clip-name {
+	margin-top: -53px;
+	margin-left: 3px;
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 1) 100%);
+	width: 309px;
+	height: 50px;
+	line-height: 70px;
+	color: white;
+	font-weight: bold;
+	text-overflow: ellipsis;
+	font-size: 14px;
+	text-align: center;
+	vertical-align: bottom;
+	pointer-events: none;
+	z-index: 100;
+	overflow: hidden;
+	margin-bottom: -3px;
+	transition: all 0.3s ease;
+}
+
+.top-banner {
+	position: absolute;
+	width: 309px;
+	margin-top: 3px;
+	margin-left: 3px;
+	height: 50px;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 1) 100%);
+	pointer-events: none;
+	transition: all 0.3s ease;
+}
+
+.view-count {
+	height: 20px;
+	line-height: 21px;
+	color: white;
+	font-weight: bold;
+	position: absolute;
+	margin-left: 10px;
+	margin-top: 5px;
+	font-size: 10px;
+	letter-spacing: 1px;
+}
+
+.view-icon > img {
+	height: 20px;
+	margin-left: 10px;
+	margin-top: 5px;
+	vertical-align: middle;
+}
+
+.date-added {
+	height: 20px;
+	line-height: 21px;
+	color: white;
+	font-weight: bold;
+	position: absolute;
+	margin-top: 5px;
+	font-size: 10px;
+	letter-spacing: 1px;
+	right: 0;
+	padding-right: 5px;
+}

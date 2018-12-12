@@ -122,11 +122,11 @@ export const fetchChannelFailure = (error, userObj) => ({
 	user: userObj
 });
 
-export function fetchChannel(user, time, type) {
+export function fetchStreamVideos(user, time) {
 	return dispatch => {
 		dispatch(fetchChannelBegin());
 		return axios
-			.get(`${api}/clips/top?${type}=${user}&limit=100&period=${time}`, options)
+			.get(`${api}/clips/top?channel=${user}&limit=100&period=${time}`, options)
 			.then(res => {
 				let sort = {};
 				sort[time] = res.data.clips;
@@ -138,11 +138,9 @@ export function fetchChannel(user, time, type) {
 				return userObj;
 			})
 			.then(userOBJ => {
-				console.log(userOBJ);
 				return axios
 					.get(`${api}/channels/${userOBJ[user][time][0].broadcaster.id}`, options)
 					.then(caster => {
-						console.log();
 						userOBJ[user]["details"] = caster.data;
 						dispatch(fetchChannelSucess(userOBJ, user, time));
 						return caster.data;
@@ -154,6 +152,51 @@ export function fetchChannel(user, time, type) {
 			.catch(error => {
 				let obj = {};
 				obj[user] = {};
+				console.log("No clips found");
+				dispatch(fetchChannelFailure(error.response, obj));
+			});
+	};
+}
+
+export const FETCH_GAME_TOP_REQUEST = "FETCH_GAME_TOP_REQUEST";
+export const FETCH_GAME_TOP_SUCCESS = "FETCH_GAME_TOP_SUCCESS";
+export const FETCH_GAME_TOP_FAILURE = "FETCH_GAME_TOP_FAILURE";
+
+export const fetchGameBegin = () => ({
+	type: FETCH_GAME_TOP_REQUEST
+});
+
+export const fetchGameSucess = (channel, name, sort) => ({
+	type: FETCH_GAME_TOP_SUCCESS,
+	payload: channel,
+	user: name,
+	sort
+});
+
+export const fetchGameFailure = (error, userObj) => ({
+	type: FETCH_GAME_TOP_FAILURE,
+	payload: error,
+	user: userObj
+});
+
+export function fetchGameVideos(game, time) {
+	return dispatch => {
+		dispatch(fetchGameBegin());
+		return axios
+			.get(`${api}/clips/top?game=${game}&limit=100&period=${time}`, options)
+			.then(res => {
+				let sort = {};
+				sort[time] = res.data.clips;
+				sort["cursor"] = res.data._cursor;
+
+				let userObj = {};
+				userObj[game] = { ...sort };
+				dispatch(fetchGameSucess(userObj, game, time));
+				return userObj;
+			})
+			.catch(error => {
+				let obj = {};
+				obj[game] = {};
 				console.log("No clips found");
 				dispatch(fetchChannelFailure(error.response, obj));
 			});

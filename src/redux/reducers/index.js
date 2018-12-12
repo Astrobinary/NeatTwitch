@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
 
-import gameReducer from "./gameReducer";
-import streamers from "./streamers";
+import gamesReducer from "./gamesReducer";
+import streamersReducer from "./streamersReducer";
 
 const AppReducer = combineReducers({
-  gameReducer,
-  streamers
+	gamesReducer,
+	streamersReducer
 });
 
 export default AppReducer;

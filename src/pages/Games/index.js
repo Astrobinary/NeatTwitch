@@ -37,9 +37,9 @@ class Games extends Component {
 
 const mapStateToProps = state => {
 	return {
-		gameList: state.gameReducer.games,
-		loading: state.gameReducer.loading,
-		error: state.gameReducer.error
+		gameList: state.gamesReducer.games,
+		loading: state.gamesReducer.loading,
+		error: state.gamesReducer.error
 	};
 };
 

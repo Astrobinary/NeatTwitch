@@ -83,10 +83,10 @@ class Streamers extends Component {
 
 const mapStateToProps = state => {
 	return {
-		twitch: state.streamers._twitch,
-		loading: state.streamers.loading,
-		error: state.streamers.error,
-		offset: state.streamers.offset
+		twitch: state.streamersReducer._twitch,
+		loading: state.streamersReducer.loading,
+		error: state.streamersReducer.error,
+		offset: state.streamersReducer.offset
 	};
 };
 

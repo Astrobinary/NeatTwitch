@@ -13,7 +13,7 @@ import Feed from "./pages/Feed";
 import Streamers from "./pages/Streamers";
 import Games from "./pages/Games";
 
-import _Videos from "./components/videoList";
+import _Videos from "./components/videoListContainer";
 import _PlayVideoList from "./components/videoplayerlist";
 import _PlayVideoSingle from "./components/videoplayersingle";
 

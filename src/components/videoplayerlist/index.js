@@ -22,6 +22,10 @@ class videoplayerlist extends Component {
 			let backURL = split.splice(1, split.length - 2);
 			backURL = backURL.join("/");
 
+			if (split.length < 3) back = "feed";
+			console.log(split);
+			console.log(back);
+
 			this.sizeRef = React.createRef();
 			this.state = { back, backURL, src: "", video: this.props.location.state.videos[this.props.location.state.current], next: this.props.location.state.videos[this.props.location.state.next], prev: this.props.location.state.videos[this.props.location.state.prev] };
 		}

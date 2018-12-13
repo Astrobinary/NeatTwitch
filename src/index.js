@@ -35,7 +35,7 @@ const Index = () => (
 					<Redirect from="/" exact to="/feed" />
 
 					<Route exact path="/feed" component={Feed} />
-					{/* <Route exact path="/feed/:videoID" component={_PlayVideo} /> */}
+					<Route exact path="/feed/:videoID" component={_PlayVideoList} />
 
 					<Route exact path="/streamers" component={Streamers} />
 					<Route exact path="/streamers/:streamerID" component={_Videos} />

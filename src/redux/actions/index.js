@@ -3,6 +3,47 @@ import axios from "axios";
 const options = { headers: { "Client-ID": "15c6l9641yo97kt42nnsa51vrwp70y", accept: "application/vnd.twitchtv.v5+json" } };
 const api = "https://api.twitch.tv/kraken";
 
+export const FETCH_FEED_REQUEST = "FETCH_FEED_REQUEST";
+export const FETCH_FEED_SUCCESS = "FETCH_FEED_SUCCESS";
+export const FETCH_FEED_FAILURE = "FETCH_FEED_FAILURE";
+
+export const fetchFeedBegin = () => ({ type: FETCH_FEED_REQUEST });
+
+export const fetchFeedSucess = (feed, sort) => ({
+	type: FETCH_FEED_SUCCESS,
+	payload: feed,
+	sort
+});
+
+export const fetchFeedFailure = (error, obj) => ({
+	type: FETCH_FEED_FAILURE,
+	payload: obj,
+	error
+});
+
+export function fetchFeedVideos(time) {
+	return dispatch => {
+		dispatch(fetchFeedBegin());
+		return axios
+			.get(`${api}/clips/top?limit=100&period=${time}`, options)
+			.then(res => {
+				let sort = {};
+				sort[time] = res.data.clips;
+				sort["cursor"] = res.data._cursor;
+
+				let userObj = { ...sort };
+
+				dispatch(fetchFeedSucess(userObj, time));
+				return userObj;
+			})
+			.catch(error => {
+				let obj = {};
+				console.log("No clips found");
+				dispatch(fetchFeedFailure(error.response, obj));
+			});
+	};
+}
+
 export const FETCH_GAMES_REQUEST = "FETCH_GAMES_REQUEST";
 export const FETCH_GAMES_SUCCESS = "FETCH_GAMES_SUCCESS";
 export const FETCH_GAMES_FAILURE = "FETCH_GAMES_FAILURE";

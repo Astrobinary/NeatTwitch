@@ -9,7 +9,6 @@ import viewIcon from "./view.svg";
 class videoListItem extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			isHovered: false,
 			error: false

@@ -73,7 +73,6 @@ class videoListContainer extends Component {
 
 	render() {
 		const loadGif = <img src={loadIcon} alt="load icon" />;
-		console.log(this.props);
 		let clips;
 		if (this.props.videos !== undefined) {
 			if (this.props.videos[this.state.currentSelection] !== undefined) {
@@ -88,7 +87,6 @@ class videoListContainer extends Component {
 		return (
 			<section>
 				<SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name"]} />
-
 				<div className="top-bar">
 					<Backto url={this.state.backURL} back={this.state.back} />
 					<div className="videolist-options">

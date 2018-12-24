@@ -6,20 +6,22 @@ import { fetchStreamVideos, fetchGameVideos } from "../../redux/actions";
 import SimpleStorage from "react-simple-storage";
 import VideoListItem from "./videoListItem";
 import Backto from "../backto";
+import Info from "../streamerInfo";
 
 import optionIcon from "./options.svg";
 import loadIcon from "./Preloader_5.gif";
 
 import "./videolist.scss";
+
 class videoListContainer extends Component {
 	constructor(props) {
 		super(props);
 
-		let current = JSON.parse(localStorage.getItem("_currentSelection"));
+		let current = JSON.parse(localStorage.getItem("_currentClipSelection"));
 		if (current === undefined || current === null) {
 			current = "week";
 		} else {
-			current = JSON.parse(localStorage.getItem("_currentSelection"));
+			current = JSON.parse(localStorage.getItem("_currentClipSelection"));
 		}
 
 		let split = this.props.location.pathname.split("/");
@@ -30,7 +32,7 @@ class videoListContainer extends Component {
 
 		this.state = {
 			showMenu: false,
-			currentSelection: current,
+			currentClipSelection: current,
 			back,
 			backURL,
 			name
@@ -39,11 +41,11 @@ class videoListContainer extends Component {
 
 	componentWillMount() {
 		if (this.props.match.params.streamerID) {
-			if (this.props.videos === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, this.state.currentSelection);
+			if (this.props.videos === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, this.state.currentClipSelection);
 		}
 
 		if (this.props.match.params.gameID) {
-			if (this.props.videos === undefined) this.props.fetchGameVideos(this.props.match.params.gameID, this.state.currentSelection);
+			if (this.props.videos === undefined) this.props.fetchGameVideos(this.props.match.params.gameID, this.state.currentClipSelection);
 		}
 	}
 
@@ -52,7 +54,7 @@ class videoListContainer extends Component {
 	};
 
 	updateMenu = time => {
-		this.setState({ showMenu: false, currentSelection: time });
+		this.setState({ showMenu: false, currentClipSelection: time });
 
 		if (this.props.match.params.streamerID) {
 			if (this.props.videos[time] === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, time);
@@ -64,7 +66,11 @@ class videoListContainer extends Component {
 	};
 
 	getClips = () => {
-		return this.props.videos[this.state.currentSelection].map((x, index, arr) => (
+		if (this.props.videos[this.state.currentClipSelection].length < 1) {
+			return <div>No clips found...</div>;
+		}
+
+		return this.props.videos[this.state.currentClipSelection].map((x, index, arr) => (
 			<Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
 				<VideoListItem video={x} />
 			</Link>
@@ -74,26 +80,42 @@ class videoListContainer extends Component {
 	render() {
 		const loadGif = <img src={loadIcon} alt="load icon" />;
 		let clips;
+
+		// if (this.props.match.params.streamerID) {
+		// 	topInfo = <StreamerInfo streamer={this.props.videos} />;
+		// }
+
+		// if (this.props.match.params.gameID) {
+		// 	topInfo = <div>GAMES</div>;
+		// }
+
 		if (this.props.videos !== undefined) {
-			if (this.props.videos[this.state.currentSelection] !== undefined) {
+			if (this.props.videos[this.state.currentClipSelection] !== undefined) {
 				clips = this.getClips();
 			} else {
-				clips = <div>No clips found this {this.state.currentSelection}</div>;
+				if (this.props.match.params.streamerID) {
+					if (this.props.videos === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, this.state.currentClipSelection);
+				}
+
+				if (this.props.match.params.gameID) {
+					if (this.props.videos === undefined) this.props.fetchGameVideos(this.props.match.params.gameID, this.state.currentClipSelection);
+				}
 			}
 		} else {
-			clips = <div>Something went wrong...?</div>;
+			clips = <div>{this.props.error}</div>;
 		}
 
 		return (
 			<section>
 				<SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name"]} />
+
 				<div className="top-bar">
 					<Backto url={this.state.backURL} back={this.state.back} />
 					<div className="videolist-options">
 						<img src={optionIcon} alt="options" />
 						<span>SORT TOP CLIPS BY</span>
 						<span className="options-choice" onClick={this.toggleMenu}>
-							{this.state.currentSelection}
+							{this.state.currentClipSelection}
 						</span>
 						{this.state.showMenu ? (
 							<div className="time-menu">
@@ -105,7 +127,7 @@ class videoListContainer extends Component {
 						) : null}
 					</div>
 				</div>
-
+				<Info streamer={this.props.videos} type={this.props.match.params} />
 				<section className="clips-container">{this.props.loading ? loadGif : clips}</section>
 			</section>
 		);

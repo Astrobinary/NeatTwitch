@@ -12,7 +12,7 @@ export const fetchFeedBegin = () => ({ type: FETCH_FEED_REQUEST });
 export const fetchFeedSucess = (feed, sort) => ({
 	type: FETCH_FEED_SUCCESS,
 	payload: feed,
-	sort
+	time: sort
 });
 
 export const fetchFeedFailure = (error, obj) => ({
@@ -105,9 +105,10 @@ export const fetchStreamersSucess = (streamers, offset) => ({
 	offset
 });
 
-export const fetchStreamersFailure = error => ({
+export const fetchStreamersFailure = (error, userObj) => ({
 	type: FETCH_STREAMERS_FAILURE,
-	payload: error
+	payload: userObj,
+	error
 });
 
 export function fetchStreamers(offset = 0) {
@@ -145,6 +146,7 @@ export function fetchMoreStreamers(offset = 0) {
 export const FETCH_CHANNEL_TOP_REQUEST = "FETCH_CHANNEL_TOP_REQUEST";
 export const FETCH_CHANNEL_TOP_SUCCESS = "FETCH_CHANNEL_TOP_SUCCESS";
 export const FETCH_CHANNEL_TOP_FAILURE = "FETCH_CHANNEL_TOP_FAILURE";
+export const FETCH_CHANNEL_TOP_SEMI_SUCCESS = "FETCH_CHANNEL_TOP_SEMI_SUCCESS";
 
 export const fetchChannelBegin = () => ({
 	type: FETCH_CHANNEL_TOP_REQUEST
@@ -157,10 +159,16 @@ export const fetchChannelSucess = (channel, name, sort) => ({
 	sort
 });
 
-export const fetchChannelFailure = (error, userObj) => ({
+export const fetchChannelSemiSucess = (channel, name, sort) => ({
+	type: FETCH_CHANNEL_TOP_SEMI_SUCCESS,
+	payload: channel,
+	user: name,
+	sort
+});
+
+export const fetchChannelFailure = error => ({
 	type: FETCH_CHANNEL_TOP_FAILURE,
-	payload: error,
-	user: userObj
+	error
 });
 
 export function fetchStreamVideos(user, time) {
@@ -179,6 +187,10 @@ export function fetchStreamVideos(user, time) {
 				return userObj;
 			})
 			.then(userOBJ => {
+				if (userOBJ[user][time].length < 1) {
+					return dispatch(fetchChannelSemiSucess(userOBJ, user, time));
+				}
+
 				return axios
 					.get(`${api}/channels/${userOBJ[user][time][0].broadcaster.id}`, options)
 					.then(caster => {
@@ -187,14 +199,12 @@ export function fetchStreamVideos(user, time) {
 						return caster.data;
 					})
 					.catch(error => {
-						dispatch(fetchChannelFailure(error.response));
+						dispatch(fetchChannelFailure(`${user}'s details could not be found.`));
 					});
 			})
 			.catch(error => {
-				let obj = {};
-				obj[user] = {};
-				console.log("No clips found");
-				dispatch(fetchChannelFailure(error.response, obj));
+				console.log(error);
+				dispatch(fetchChannelFailure(`${user} not found sorted by ${time}`));
 			});
 	};
 }

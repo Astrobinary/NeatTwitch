@@ -26,7 +26,7 @@ class Games extends Component {
 
 		this.state = {
 			showMenu: false,
-			currentSelection: current
+			currentGameSort: current
 		};
 	}
 
@@ -40,7 +40,7 @@ class Games extends Component {
 	};
 
 	updateMenu = time => {
-		this.setState({ showMenu: false, currentSelection: time });
+		this.setState({ showMenu: false, currentGameSort: time });
 
 		console.log(`Game sort changed: ${time}`);
 	};
@@ -65,7 +65,7 @@ class Games extends Component {
 					<img src={optionIcon} alt="options" />
 					<span>SORT TOP GAMES BY</span>
 					<span className="options-choice" onClick={this.toggleMenu}>
-						{this.state.currentSelection}
+						{this.state.currentGameSort}
 					</span>
 					{this.state.showMenu ? (
 						<div className="time-menu">

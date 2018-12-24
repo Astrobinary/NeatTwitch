@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 
-import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_FAILURE } from "../actions";
+import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE } from "../actions";
 
 const initialState = {
 	_twitch: [],
@@ -28,7 +28,7 @@ const streamersReducer = (state = initialState, action) => {
 			return {
 				...state,
 				loading: false,
-				error: action.payload
+				error: action.error
 			};
 
 		case FETCH_CHANNEL_TOP_REQUEST:
@@ -37,15 +37,32 @@ const streamersReducer = (state = initialState, action) => {
 				loading: true,
 				error: null
 			};
-		case FETCH_CHANNEL_TOP_SUCCESS:
-			let state2;
+
+		case FETCH_CHANNEL_TOP_SEMI_SUCCESS:
+			let prevState;
 			let obj = action.payload;
 
 			if (state[action.user] === undefined) {
-				state2 = update(state[action.user], { $set: action.payload });
+				prevState = update(state[action.user], { $set: action.payload });
 			} else {
-				state2 = update(state[action.user], { $merge: action.payload[action.user] });
-				obj[action.user] = state2;
+				prevState = update(state[action.user], { $merge: action.payload[action.user] });
+				obj[action.user] = prevState;
+			}
+
+			return {
+				...state,
+				loading: false,
+				...obj
+			};
+
+		case FETCH_CHANNEL_TOP_SUCCESS:
+			obj = action.payload;
+
+			if (state[action.user] === undefined) {
+				prevState = update(state[action.user], { $set: action.payload });
+			} else {
+				prevState = update(state[action.user], { $merge: action.payload[action.user] });
+				obj[action.user] = prevState;
 			}
 
 			return {
@@ -57,8 +74,7 @@ const streamersReducer = (state = initialState, action) => {
 			return {
 				...state,
 				loading: false,
-				error: action.payload,
-				...action.user
+				error: action.error
 			};
 
 		default:

@@ -14,22 +14,23 @@ class Feed extends Component {
 	constructor(props) {
 		super(props);
 
-		let current = JSON.parse(localStorage.getItem("_currentSelection"));
-		if (current === undefined || current === null) {
-			current = "day";
+		let currentFeed = JSON.parse(localStorage.getItem("_currentFeedSelection"));
+
+		if (currentFeed === undefined || currentFeed === null) {
+			currentFeed = "day";
 		} else {
-			current = JSON.parse(localStorage.getItem("_currentSelection"));
+			currentFeed = JSON.parse(localStorage.getItem("_currentFeedSelection"));
 		}
 
 		this.state = {
 			showMenu: false,
-			currentSelection: current
+			currentFeedSelection: currentFeed
 		};
 	}
 
 	componentWillMount() {
 		console.log(this.props.clips);
-		this.props.fetchFeedVideos(this.state.currentSelection);
+		this.props.fetchFeedVideos(this.state.currentFeedSelection);
 		if (this.props.clips.length < 1) {
 			console.log(this.props.clips);
 		}
@@ -40,7 +41,7 @@ class Feed extends Component {
 	};
 
 	updateMenu = time => {
-		this.setState({ showMenu: false, currentSelection: time });
+		this.setState({ showMenu: false, currentFeedSelection: time });
 
 		if (this.props.clips[time] === undefined) {
 			console.log("wut");
@@ -49,8 +50,8 @@ class Feed extends Component {
 	};
 
 	getClips = limit => {
-		const original = this.props.clips[this.state.currentSelection];
-		let clip = original.filter((i, index) => index < 10);
+		const original = this.props.clips[this.state.currentFeedSelection];
+		let clip = original.filter((i, index) => index < limit);
 
 		return clip.map((x, index, arr) => (
 			<Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
@@ -62,10 +63,10 @@ class Feed extends Component {
 	render() {
 		const loadGif = <img src={loadIcon} alt="load icon" />;
 		let clips;
-		if (this.props.clips[this.state.currentSelection] !== undefined) {
+		if (this.props.clips[this.state.currentFeedSelection] !== undefined) {
 			clips = this.getClips(10);
 		} else {
-			clips = <div>No clips found this {this.state.currentSelection}</div>;
+			clips = <div>No clips found this {this.state.currentFeedSelection}</div>;
 		}
 
 		return (
@@ -74,9 +75,9 @@ class Feed extends Component {
 				<div className="top-bar">
 					<div className="videolist-options">
 						<img src={optionIcon} alt="options" />
-						<span>SORT TOP CLIPS BY</span>
+						<span>SORT FEED BY</span>
 						<span className="options-choice" onClick={this.toggleMenu}>
-							{this.state.currentSelection}
+							{this.state.currentFeedSelection}
 						</span>
 						{this.state.showMenu ? (
 							<div className="time-menu">
@@ -97,7 +98,7 @@ class Feed extends Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		clips: state.feedsReducer.clips,
+		clips: state.feedsReducer,
 		loading: state.feedsReducer.loading,
 		error: state.feedsReducer.error
 	};

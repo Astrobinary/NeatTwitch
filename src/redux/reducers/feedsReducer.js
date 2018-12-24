@@ -1,3 +1,4 @@
+import update from "immutability-helper";
 import { FETCH_FEED_REQUEST, FETCH_FEED_SUCCESS, FETCH_FEED_FAILURE } from "../actions";
 
 const initialState = {
@@ -16,11 +17,22 @@ const feedsReducer = (state = initialState, action) => {
 				error: null
 			};
 		case FETCH_FEED_SUCCESS:
+			let prevState;
+			let obj = action.payload;
+
+			if (state[action.time] === undefined) {
+				prevState = update(state[action.time], { $set: action.payload });
+			} else {
+				prevState = update(state[action.time], { $merge: action.payload[action.user] });
+				obj[action.time] = prevState;
+			}
+
 			return {
 				...state,
-				clips: { ...state.top, ...action.payload },
+				// clips: { ...state.top, ...action.payload },
 				loading: false,
-				offset: action.offset
+				offset: action.offset,
+				...obj
 			};
 		case FETCH_FEED_FAILURE:
 			return {

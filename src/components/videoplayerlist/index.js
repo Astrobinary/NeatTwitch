@@ -22,7 +22,7 @@ class videoplayerlist extends Component {
 			let backURL = split.splice(1, split.length - 2);
 			backURL = backURL.join("/");
 
-			if (split.length < 3) back = "feed";
+			if (split.length < 2) back = "feed";
 			console.log(split);
 			console.log(back);
 

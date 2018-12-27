@@ -123,8 +123,15 @@ class videoplayerlist extends Component {
                 <div className="player-views">{this.state.video.views.toLocaleString()} views</div>
                 <div className="player-icons">
                   <img src={likeIcon} alt="like icon" />
-                  <img src={vodIcon} alt="vod icon" />
-                  <img src={downloadIcon} alt="download icon" />
+                  {this.state.video.vod ? (
+                    <a href={this.state.video.vod.url}>
+                      <img src={vodIcon} alt="vod icon" />
+                    </a>
+                  ) : null}
+
+                  <a href={this.getMp4()} download>
+                    <img src={downloadIcon} alt="download icon" />
+                  </a>
                 </div>
               </div>
             </div>

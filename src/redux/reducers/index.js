@@ -5,9 +5,9 @@ import streamersReducer from "./streamersReducer";
 import feedsReducer from "./feedsReducer";
 
 const AppReducer = combineReducers({
-	feedsReducer,
-	streamersReducer,
-	gamesReducer
+  feedsReducer,
+  streamersReducer,
+  gamesReducer
 });
 
 export default AppReducer;

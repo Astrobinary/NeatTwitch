@@ -1,51 +1,51 @@
 .Streamers {
-	text-align: center;
+    text-align: center;
 }
 
 .streamer-container {
-	display: flex;
-	justify-content: space-evenly;
-	width: 100%;
-	flex-direction: row;
-	flex-wrap: wrap;
-	padding-top: 20px;
-}
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 20px;
 
-.streamer-container:after {
-	content: "";
-	flex: auto;
+    &:after {
+        content: "";
+        flex: auto;
+    }
 }
 
 .streamer-item {
-	display: flex;
-	flex-direction: column;
-	padding: 0px 15px;
-	padding-bottom: 30px;
-}
+    display: flex;
+    flex-direction: column;
+    padding: 0px 15px;
+    padding-bottom: 30px;
 
-.streamer-item > img {
-	border: 3px solid rgba(255, 255, 255, 0.1);
-	box-shadow: 0px 0px 25px -5px rgba(0, 0, 0, 0.75);
-	transition: all 0.3s ease;
-}
+    img {
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0px 0px 25px -5px rgba(0, 0, 0, 0.75);
+        transition: all 0.3s ease;
 
-.streamer-item > img:hover {
-	border: 3px solid #0fa5a5;
-	cursor: pointer;
+        &:hover {
+            border: 3px solid #0fa5a5;
+            cursor: pointer;
+        }
+    }
 }
 
 .streamer-name {
-	margin-top: -33px;
-	width: 150px;
-	margin-left: 3px;
-	text-align: center;
-	background-color: rgba(0, 0, 0, 0.5);
-	height: 30px;
-	line-height: 30px;
-	color: white;
-	font-weight: bold;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	z-index: 100;
-	pointer-events: none;
+    margin-top: -33px;
+    width: 150px;
+    margin-left: 3px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 30px;
+    line-height: 30px;
+    color: white;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    z-index: 100;
+    pointer-events: none;
 }

@@ -1,44 +1,39 @@
-@import "../../components/videoListContainer/videolist.scss";
+@import "../../components/previewContainer/previewContainer.scss";
 
 .Feed {
-  text-align: center;
+    text-align: center;
 }
 
 .clips-container-feed {
-  @extend .clips-container;
-  margin-bottom: 20px;
+    @extend .clips-container;
+    margin-bottom: 20px;
 }
 
 .top-bar-feed {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 20px;
-  width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    width: 100%;
 }
 
 .top-title {
-  color: white;
-  line-height: 25px;
-  letter-spacing: 1px;
-  opacity: 0.8;
-  font-weight: bold;
-  border-bottom: 3px solid rgba(15, 165, 165, 0.5);
-  text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
+    color: white;
+    line-height: 25px;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    font-weight: bold;
+    border-bottom: 3px solid rgba(15, 165, 165, 0.5);
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
 }
 
-// .top-title-twitch {
-//   @extend .top-title;
-//   border-bottom: 3px solid rgba(15, 165, 165, 0.5);
-// }
-
 .alice-carousel__prev-btn {
-  padding-top: 0px;
+    padding-top: 0px;
 }
 
 .alice-carousel__dots {
-  margin-top: 0px;
+    margin-top: 0px;
 }
 
 .alice-carousel__stage-item {
-  margin-right: 1px;
+    margin-right: 1px;
 }

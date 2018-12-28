@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import moment from "moment";
 import Img from "react-image";
 import "./videopreview.scss";
-
 import missingPreview from "./404.jpg";
 import viewIcon from "./view.svg";
 

@@ -153,7 +153,7 @@ class videoPlayer extends Component {
                         ) : null}
                     </div>
                 </section>
-                <Comments />
+                {/* <Comments /> */}
             </div>
         );
     }

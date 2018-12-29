@@ -27,7 +27,7 @@ class Feed extends Component {
         this.state = {
             showMenu: false,
             currentFeedSelection: currentFeed,
-            responsive: { 0: { items: 1 }, 600: { items: 3 }, 1000: { items: 3 }, 1400: { items: 4 }, 1700: { items: 5 }, 2000: { items: 6 }, 2560: { items: 7 } }
+            responsive: { 0: { items: 1 }, 600: { items: 3 }, 1000: { items: 3 }, 1400: { items: 4 }, 1700: { items: 6 }, 2000: { items: 6 }, 2560: { items: 7 } }
         };
     }
 

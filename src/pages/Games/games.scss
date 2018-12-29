@@ -1,10 +1,11 @@
 .Games {
     text-align: center;
+    margin: auto 15px;
 }
 
 .games-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
@@ -18,16 +19,16 @@
 .games-item {
     display: flex;
     flex-direction: column;
-    padding: 0px 10px;
+    padding: 0px 15px;
     padding-bottom: 20px;
 
     img {
-        border: 3px solid rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(0, 0, 0, 0.3);
         box-shadow: 0px 0px 25px -5px rgba(0, 0, 0, 0.75);
         width: 150px;
 
         &:hover {
-            border: 3px solid #0fa5a5;
+            border: 2px solid rgba(15, 165, 165, 0.8);
             cursor: pointer;
         }
     }

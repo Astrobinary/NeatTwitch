@@ -102,8 +102,9 @@ class previewContainer extends Component {
             <section>
                 <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name"]} />
 
+                <Info streamer={this.props.videos} type={this.props.match.params} />
                 <div className="top-bar">
-                    <Backto url={this.state.backURL} back={this.state.back} />
+                    {/* <Backto url={this.state.backURL} back={this.state.back} /> */}
                     <div className="sorting">
                         <img src={optionIcon} alt="options" />
                         <span>SORT TOP CLIPS BY</span>
@@ -120,7 +121,6 @@ class previewContainer extends Component {
                         ) : null}
                     </div>
                 </div>
-                <Info streamer={this.props.videos} type={this.props.match.params} />
                 {this.props.loading ? loadGif : <section className="clips-container">{clips}</section>}
             </section>
         );

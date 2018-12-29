@@ -21,7 +21,7 @@ class clipsInfo extends Component {
                 </section>
             );
         } else if (this.props.type.gameID && this.props.streamer !== undefined) {
-            return <div className="top-title">{this.props.type.gameID}</div>;
+            return <div className="clips-info-game-title">{this.props.type.gameID}</div>;
         } else {
             return <div />;
         }

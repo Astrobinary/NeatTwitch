@@ -7,6 +7,9 @@
 .clips-container-feed {
     @extend .clips-container;
     margin-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
 }
 
 .top-bar-feed {
@@ -19,12 +22,13 @@
 .top-title {
     color: white;
     line-height: 25px;
-    letter-spacing: 1px;
+    letter-spacing: 4px;
     opacity: 0.8;
-    font-weight: bold;
-    border-bottom: 3px solid rgba(15, 165, 165, 0.5);
-    text-shadow: 2px 2px rgba(0, 0, 0, 0.1);
-    margin-top: 35px;
+    font-weight: 400;
+    border-bottom: 3px solid rgba(15, 165, 165, 0.1);
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+    margin-top: -10px;
+    padding-left: 35px;
 }
 
 .alice-carousel__prev-btn {
@@ -32,9 +36,25 @@
 }
 
 .alice-carousel__dots {
-    margin-top: 0px;
+    margin-top: -10px;
+    .__active {
+        background-color: rgba(15, 165, 165, 0.5);
+    }
 }
 
-.alice-carousel__stage-item {
-    margin-right: 1px;
+.alice-carousel__dots-item {
+    margin-right: 30px;
+    width: 15px;
+    height: 5px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0%;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: rgba(15, 165, 165, 0.5);
+    }
+
+    &:not(:last-child) {
+        margin-right: 30px;
+    }
 }

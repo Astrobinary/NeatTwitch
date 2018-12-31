@@ -27,7 +27,7 @@ class Feed extends Component {
         this.state = {
             showMenu: false,
             currentFeedSelection: currentFeed,
-            responsive: { 0: { items: 1 }, 600: { items: 3 }, 1000: { items: 3 }, 1400: { items: 4 }, 1700: { items: 6 }, 2000: { items: 6 }, 2560: { items: 7 } }
+            responsive: { 0: { items: 1 }, 600: { items: 3 }, 1000: { items: 3 }, 1400: { items: 4 }, 1700: { items: 5 }, 2000: { items: 6 }, 2560: { items: 7 } }
         };
     }
 
@@ -46,7 +46,6 @@ class Feed extends Component {
         this.setState({ showMenu: false, currentFeedSelection: time });
 
         if (this.props.clips[time] === undefined) {
-            console.log("wut");
             this.props.fetchFeedVideos(time);
         }
     };
@@ -79,10 +78,9 @@ class Feed extends Component {
                 <section className="clips-container-feed">
                     <AliceCarousel
                         stagePadding={{
-                            paddingLeft: 20,
+                            paddingLeft: 50,
                             paddingRight: 0
                         }}
-                        dotsDisabled={true}
                         infinite={false}
                         items={[1, 2, 3]}
                         buttonsDisabled={true}
@@ -96,10 +94,9 @@ class Feed extends Component {
                 <section className="clips-container-feed">
                     <AliceCarousel
                         stagePadding={{
-                            paddingLeft: 20,
+                            paddingLeft: 50,
                             paddingRight: 0
                         }}
-                        dotsDisabled={true}
                         infinite={false}
                         items={[1, 2, 3]}
                         buttonsDisabled={true}
@@ -113,10 +110,9 @@ class Feed extends Component {
                 <section className="clips-container-feed">
                     <AliceCarousel
                         stagePadding={{
-                            paddingLeft: 20,
+                            paddingLeft: 50,
                             paddingRight: 0
                         }}
-                        dotsDisabled={true}
                         infinite={false}
                         items={[1, 2, 3]}
                         buttonsDisabled={true}

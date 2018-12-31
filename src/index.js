@@ -21,29 +21,31 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 let store = createStore(AppReducer, composeEnhancer(applyMiddleware(thunk)));
 
 const Index = () => (
-	<Router>
-		<Provider store={store}>
-			<div className="App">
-				<Navagation />
-				<Switch>
-					<Redirect from="/" exact to="/feed" />
+    <Router>
+        <Provider store={store}>
+            <div className="App">
+                <Navagation />
+                <Switch>
+                    <Redirect from="/" exact to="/feed" />
 
-					<Route exact path="/feed" component={Feed} />
-					<Route exact path="/feed/:videoID" component={_videoPlayer} />
+                    <Route exact path="/feed" component={Feed} />
+                    <Route exact path="/feed/twitch" component={_PreviewContainer} />
+                    <Route exact path="/feed/youtube" component={_PreviewContainer} />
+                    <Route exact path="/feed/:videoID" component={_videoPlayer} />
 
-					<Route exact path="/streamers" component={Streamers} />
-					<Route exact path="/streamers/:streamerID" component={_PreviewContainer} />
-					<Route exact path="/streamers/:streamerID/:videoID" component={_videoPlayer} />
+                    <Route exact path="/streamers" component={Streamers} />
+                    <Route exact path="/streamers/:streamerID" component={_PreviewContainer} />
+                    <Route exact path="/streamers/:streamerID/:videoID" component={_videoPlayer} />
 
-					<Route exact path="/games" component={Games} />
-					<Route exact path="/games/:gameID" component={_PreviewContainer} />
-					<Route exact path="/games/:gameID/:videoID" component={_videoPlayer} />
+                    <Route exact path="/games" component={Games} />
+                    <Route exact path="/games/:gameID" component={_PreviewContainer} />
+                    <Route exact path="/games/:gameID/:videoID" component={_videoPlayer} />
 
-					<Route exact path="/:videoID" component={_videoPlayer} />
-				</Switch>
-			</div>
-		</Provider>
-	</Router>
+                    <Route exact path="/:videoID" component={_videoPlayer} />
+                </Switch>
+            </div>
+        </Provider>
+    </Router>
 );
 
 ReactDOM.render(<Index />, document.getElementById("root"));

@@ -24,16 +24,18 @@ iframe {
     margin-right: -10%;
     transition: all 0.3s ease;
     width: 25%;
+
     img {
         max-width: 100%;
     }
 
     .player-prev-icon {
         position: absolute;
-        padding-top: 5%;
-        margin-left: 5%;
-        height: 50px;
-        width: 50px;
+        padding-top: 6%;
+        margin-right: 93.5%;
+        right: 0;
+        height: 35px;
+        width: 35px;
         opacity: 0.5;
         pointer-events: none;
     }
@@ -42,7 +44,7 @@ iframe {
         color: white;
         margin-right: 40%;
         text-align: center;
-        font-weight: bold;
+        font-weight: 400;
         letter-spacing: 1px;
         white-space: nowrap;
         overflow: hidden;
@@ -68,10 +70,10 @@ iframe {
 
     .player-next-icon {
         position: absolute;
-        padding-top: 5%;
-        margin-left: 14%;
-        height: 50px;
-        width: 50px;
+        padding-top: 6%;
+        margin-left: 26%;
+        height: 35px;
+        width: 35px;
         opacity: 0.5;
         pointer-events: none;
     }
@@ -79,7 +81,7 @@ iframe {
     .player-next-title {
         margin-left: 40%;
         text-align: center;
-        font-weight: bold;
+        font-weight: 400;
         letter-spacing: 1px;
         color: white;
         white-space: nowrap;
@@ -107,7 +109,6 @@ iframe {
     color: white;
     font-size: 20px;
     padding-top: 10px;
-    font-weight: bold;
     padding-left: 10px;
     width: 65%;
 }
@@ -115,7 +116,7 @@ iframe {
 .player-title {
     color: white;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
     padding-left: 10px;
     padding-top: 5px;
     display: inline-block;

@@ -6,7 +6,6 @@ import { fetchStreamVideos, fetchGameVideos } from "../../redux/actions";
 import { uid } from "react-uid";
 import SimpleStorage from "react-simple-storage";
 
-import Backto from "../backto";
 import Info from "../clipsInfo";
 import PreviewItem from "../previewItem";
 
@@ -104,7 +103,6 @@ class previewContainer extends Component {
 
                 <Info streamer={this.props.videos} type={this.props.match.params} />
                 <div className="top-bar">
-                    {/* <Backto url={this.state.backURL} back={this.state.back} /> */}
                     <div className="sorting">
                         <img src={optionIcon} alt="options" />
                         <span>SORT TOP CLIPS BY</span>

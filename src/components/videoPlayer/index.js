@@ -7,7 +7,7 @@ import SimpleStorage from "react-simple-storage";
 import moment from "moment";
 
 import Backto from "../backto";
-import Comments from "../comments";
+// import Comments from "../comments";
 
 import downloadIcon from "./download.svg";
 import shareIcon from "./share.svg";

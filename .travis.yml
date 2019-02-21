@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+ — “7”
+script:
+ — echo “Deploy!!”
+install:
+ — npm install -g firebase-tools
+after_success:
+ — firebase deploy — project liveclips-2b478 — token 1/HkhjrHF3pUH63ThmQyk7P6UCAf4zlVXmyObj1s_MLbQ

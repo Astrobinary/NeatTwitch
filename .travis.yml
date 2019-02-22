@@ -1,9 +1,17 @@
 language: node_js
-node_js:
- — “7”
-script:
- — echo “Deploy!!”
+node_js: lts/*
+sudo: false
+before_install:
+    - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.27.5
+    - export PATH=$HOME/.yarn/bin:$PATH
+cache:
+    yarn: true
 install:
- — npm install -g firebase-tools
-after_success:
- — firebase deploy — project liveclips-2b478 — token 1/HkhjrHF3pUH63ThmQyk7P6UCAf4zlVXmyObj1s_MLbQ
+    - yarn install
+script:
+    - yarn build
+deploy:
+    skip_cleanup: true
+    provider: firebase
+    token:
+        secure: 1/HkhjrHF3pUH63ThmQyk7P6UCAf4zlVXmyObj1s_MLbQ

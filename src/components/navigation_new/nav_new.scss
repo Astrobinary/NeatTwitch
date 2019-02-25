@@ -26,6 +26,10 @@ Pink Highlight: #ed4f74
     height: 50px;
     pointer-events: all;
     opacity: 0.8;
+    transition: all 0.3s ease;
+    &:hover {
+        border-bottom: 1px solid #ed4f74;
+    }
 }
 
 .nav-item {
@@ -51,7 +55,7 @@ Pink Highlight: #ed4f74
 
 .nav-search {
     display: flex;
-    flex-grow: 8;
+    flex-grow: 5;
     text-align: center;
     line-height: 50px;
     color: white;
@@ -63,6 +67,11 @@ Pink Highlight: #ed4f74
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     pointer-events: all;
     opacity: 0.8;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-bottom: 1px solid #ed4f74;
+    }
 
     img {
         margin-right: 10px;
@@ -100,6 +109,11 @@ Pink Highlight: #ed4f74
     pointer-events: all;
     padding-bottom: 3px;
     opacity: 0.8;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-bottom: 1px solid #ed4f74;
+    }
 
     img {
         width: 15px;
@@ -108,5 +122,5 @@ Pink Highlight: #ed4f74
 }
 
 .selected {
-    border-bottom: 1px solid #ed4f74;
+    border-bottom: 1px solid #0fa5a5;
 }

@@ -3,7 +3,7 @@ import moment from "moment";
 import Img from "react-image";
 
 import "./previewItem.scss";
-import missingPreview from "../../images/previewNot.jpg";
+import missingPreview from "../../images/previewNot.png";
 
 class previewItem extends Component {
     constructor(props) {

@@ -12,7 +12,8 @@ import Streamers from "./pages/Streamers";
 import Games from "./pages/Games";
 
 import _PreviewContainer from "./components/previewContainer";
-import _videoPlayer from "./components/videoPlayer";
+import _playlistPlayer from "./components/playlistPlayer";
+import _singlePlayer from "./components/singlePlayer";
 import Navagation from "./components/navigation_new";
 
 import "./global.scss";
@@ -31,17 +32,17 @@ const Index = () => (
                     <Route exact path="/feed" component={Feed} />
                     <Route exact path="/feed/twitch" component={_PreviewContainer} />
                     <Route exact path="/feed/youtube" component={_PreviewContainer} />
-                    <Route exact path="/feed/:videoID" component={_videoPlayer} />
+                    <Route exact path="/feed/:videoID" component={_playlistPlayer} />
 
                     <Route exact path="/streamers" component={Streamers} />
                     <Route exact path="/streamers/:streamerID" component={_PreviewContainer} />
-                    <Route exact path="/streamers/:streamerID/:videoID" component={_videoPlayer} />
+                    <Route exact path="/streamers/:streamerID/:videoID" component={_playlistPlayer} />
 
                     <Route exact path="/games" component={Games} />
                     <Route exact path="/games/:gameID" component={_PreviewContainer} />
-                    <Route exact path="/games/:gameID/:videoID" component={_videoPlayer} />
+                    <Route exact path="/games/:gameID/:videoID" component={_playlistPlayer} />
 
-                    <Route exact path="/:videoID" component={_videoPlayer} />
+                    <Route exact path="/:videoID" component={_singlePlayer} />
                 </Switch>
             </div>
         </Provider>

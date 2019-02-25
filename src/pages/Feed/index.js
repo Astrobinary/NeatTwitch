@@ -65,7 +65,7 @@ class Feed extends Component {
         const loadGif = <img src={loadIcon} alt="load icon" />;
         let clips;
         if (this.props.clips[this.state.currentFeedSelection] !== undefined) {
-            clips = this.getClips(20);
+            clips = this.getClips(40);
         } else {
             clips = <div>No clips found this {this.state.currentFeedSelection}</div>;
         }

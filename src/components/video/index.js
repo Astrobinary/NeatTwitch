@@ -67,7 +67,6 @@ class video extends Component {
                         </div>
                     </div>
                     <div className="player-info-right">
-                        {/* <div className="player-views">{this.props.videoInfo.views.toLocaleString()} views</div> */}
                         <div className="player-icons">
                             <img src={likeIcon} alt="like icon" />
                             <img src={shareIcon} alt="share icon" />

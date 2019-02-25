@@ -1,18 +1,15 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import {} from "react-router-dom";
 
 import "babel-polyfill";
 import { uid } from "react-uid";
-import SimpleStorage from "react-simple-storage";
 
 import Backto from "../backto";
 import Video from "../video";
-// import Comments from "../comments";
 
 import prevIcon from "./prev.svg";
 import nextIcon from "./next.svg";
-import "./videoPlayer.scss";
+import "./playlistPlayer.scss";
 
 class playlistPlayer extends Component {
     constructor(props) {
@@ -32,7 +29,7 @@ class playlistPlayer extends Component {
 
         if (backURL.includes("feed")) backURL = back;
 
-        this.state = { back, backURL, src: "", video: this.props.location.state.videos[this.props.location.state.current], next: this.props.location.state.videos[this.props.location.state.next], prev: this.props.location.state.videos[this.props.location.state.prev] };
+        this.state = { back, backURL, video: this.props.location.state.videos[this.props.location.state.current], next: this.props.location.state.videos[this.props.location.state.next], prev: this.props.location.state.videos[this.props.location.state.prev] };
     }
 
     updateVideos = next => {
@@ -52,8 +49,6 @@ class playlistPlayer extends Component {
             <div>
                 <Backto url={this.state.backURL} back={this.state.back} />
                 <section className="videoplayer">
-                    <SimpleStorage parent={this} blacklist={["src", "height", "video", "next", "prev", "back", "backURL"]} />
-
                     <div className="left">
                         {this.state.prev ? (
                             <Link key={uid(this.state.prev.slug)} to={{ pathname: `${this.state.prev.slug}`, state: { videos: this.props.location.state.videos, current: this.props.location.state.current - 1, next: this.props.location.state.next - 1, prev: this.props.location.state.prev - 1 } }}>
@@ -68,7 +63,7 @@ class playlistPlayer extends Component {
                     <Video videoInfo={this.state.video} />
                     <div className="right">
                         {this.state.next ? (
-                            <Link key={uid("s")} to={{ pathname: `${this.state.next.slug}`, state: { videos: this.props.location.state.videos, current: this.props.location.state.current + 1, next: this.props.location.state.next + 1, prev: this.props.location.state.prev + 1 } }}>
+                            <Link key={uid(this.state.next.slug)} to={{ pathname: `${this.state.next.slug}`, state: { videos: this.props.location.state.videos, current: this.props.location.state.current + 1, next: this.props.location.state.next + 1, prev: this.props.location.state.prev + 1 } }}>
                                 <div className="player-next-icon">
                                     <img src={nextIcon} alt="next" />
                                 </div>

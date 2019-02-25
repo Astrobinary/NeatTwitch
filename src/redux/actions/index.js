@@ -43,6 +43,40 @@ export function fetchFeedVideos(time) {
     };
 }
 
+//Single video fetch
+export const FETCH_SINGLE_REQUEST = "FETCH_SINGLE_REQUEST";
+export const FETCH_SINGLE_SUCCESS = "FETCH_SINGLE_SUCCESS";
+export const FETCH_SINGLE_FAILURE = "FETCH_SINGLE_FAILURE";
+
+export const fetchSingleBegin = () => ({ type: FETCH_SINGLE_REQUEST });
+
+export const fetchSingleSucess = (feed, sort) => ({
+    type: FETCH_SINGLE_SUCCESS,
+    payload: feed,
+    time: sort
+});
+
+export const fetchSingleFailure = (error, obj) => ({
+    type: FETCH_SINGLE_FAILURE,
+    payload: obj,
+    error
+});
+
+export function fetchSingleVideo(slug) {
+    return dispatch => {
+        dispatch(fetchSingleBegin());
+        return axios
+            .get(`${api}/clips/${slug}`, options)
+            .then(res => {
+                dispatch(fetchSingleSucess(res.data));
+                return res.data;
+            })
+            .catch(error => {
+                dispatch(fetchSingleFailure(error.response, {}));
+            });
+    };
+}
+
 // GAME PAGE ACTIONS
 export const FETCH_GAMES_REQUEST = "FETCH_GAMES_REQUEST";
 export const FETCH_GAMES_SUCCESS = "FETCH_GAMES_SUCCESS";

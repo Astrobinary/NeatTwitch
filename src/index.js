@@ -10,6 +10,7 @@ import * as serviceWorker from "./serviceWorker";
 import Feed from "./pages/Feed";
 import Streamers from "./pages/Streamers";
 import Games from "./pages/Games";
+import Playlists from "./pages/Playlists";
 
 import _PreviewContainer from "./components/previewContainer";
 import _playlistPlayer from "./components/playlistPlayer";
@@ -41,6 +42,8 @@ const Index = () => (
                     <Route exact path="/games" component={Games} />
                     <Route exact path="/games/:gameID" component={_PreviewContainer} />
                     <Route exact path="/games/:gameID/:videoID" component={_playlistPlayer} />
+
+                    <Route exact path="/playlists" component={Playlists} />
 
                     <Route exact path="/:videoID" component={_singlePlayer} />
                 </Switch>

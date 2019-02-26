@@ -10,10 +10,16 @@
     flex-direction: row;
     flex-wrap: wrap;
     padding-top: 20px;
+    align-items: center;
     &:after {
         content: "";
         flex: auto;
     }
+}
+
+.game-loader {
+    width: 100%;
+    margin: 0 auto;
 }
 
 .games-item {

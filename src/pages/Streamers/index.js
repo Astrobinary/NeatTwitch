@@ -6,7 +6,8 @@ import { uid } from "react-uid";
 import "./streamers.scss";
 import Img from "react-image";
 
-import loadIcon from "../../images/loading.gif";
+import Loading from "../../components/loading";
+
 import optionIcon from "../../images/sort.svg";
 import missingPreview from "../../images/streamerload.png";
 
@@ -45,8 +46,8 @@ class Streamers extends Component {
         ));
 
         const loadGif = (
-            <div>
-                <img src={loadIcon} alt="load icon" />
+            <div className="streamer-loader">
+                <Loading />
             </div>
         );
 

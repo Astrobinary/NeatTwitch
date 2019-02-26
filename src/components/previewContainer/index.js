@@ -10,7 +10,7 @@ import Info from "../clipsInfo";
 import PreviewItem from "../previewItem";
 
 import optionIcon from "../../images/sort.svg";
-import loadIcon from "../../images/loading.gif";
+import Loading from "../loading";
 
 import "./previewContainer.scss";
 
@@ -79,7 +79,7 @@ class previewContainer extends Component {
     };
 
     render() {
-        const loadGif = <img src={loadIcon} alt="load icon" />;
+        const loadGif = <Loading />;
         let clips;
         if (this.props.videos !== undefined) {
             if (this.props.videos[this.state.currentClipSelection] !== undefined) {

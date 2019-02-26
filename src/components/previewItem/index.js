@@ -3,7 +3,8 @@ import moment from "moment";
 import Img from "react-image";
 
 import "./previewItem.scss";
-import missingPreview from "../../images/previewNot.png";
+import loadPreview from "../../images/previewNot.png";
+import missing from "../../images/missing.png";
 
 class previewItem extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class previewItem extends Component {
     }
 
     render() {
-        let image = <Img className="preview-thumb" alt="preview" src={[this.props.video.thumbnails.medium, missingPreview]} loader={<img alt="missing" src={missingPreview} />} />;
+        let image = <Img className="preview-thumb" alt="preview" src={[this.props.video.thumbnails.medium, missing]} loader={<img alt="loading" src={loadPreview} />} />;
 
         return (
             <div className="preview-item" onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>

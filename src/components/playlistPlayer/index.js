@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-
+import Img from "react-image";
 import "babel-polyfill";
 import { uid } from "react-uid";
 
 import Backto from "../backto";
 import Video from "../video";
 
+import loadPreview from "../../images/previewNot.png";
+import missing from "../../images/missing_big.png";
 import prevIcon from "./prev.svg";
 import nextIcon from "./next.svg";
 import "./playlistPlayer.scss";
@@ -55,7 +57,9 @@ class playlistPlayer extends Component {
                                 <div className="player-prev-icon">
                                     <img src={prevIcon} alt="prev" />
                                 </div>
-                                <img src={this.state.prev.thumbnails.medium} alt="prev" onClick={() => this.updateVideos(false)} />
+                                {/* <img src={this.state.prev.thumbnails.medium} alt="prev" onClick={() => this.updateVideos(false)} /> */}
+                                <Img alt="prev" src={[this.state.prev.thumbnails.medium, missing]} loader={<img alt="loading" src={loadPreview} />} onClick={() => this.updateVideos(false)} />
+
                                 <div className="player-prev-title">{this.state.prev.title}</div>
                             </Link>
                         ) : null}
@@ -63,11 +67,13 @@ class playlistPlayer extends Component {
                     <Video videoInfo={this.state.video} />
                     <div className="right">
                         {this.state.next ? (
-                            <Link key={uid(this.state.next.slug)} to={{ pathname: `${this.state.next.slug}`, state: { videos: this.props.location.state.videos, current: this.props.location.state.current + 1, next: this.props.location.state.next + 1, prev: this.props.location.state.prev + 1 } }}>
+                            <Link onClick={() => this.updateVideos(true)} key={uid(this.state.next.slug)} to={{ pathname: `${this.state.next.slug}`, state: { videos: this.props.location.state.videos, current: this.props.location.state.current + 1, next: this.props.location.state.next + 1, prev: this.props.location.state.prev + 1 } }}>
                                 <div className="player-next-icon">
                                     <img src={nextIcon} alt="next" />
                                 </div>
-                                <img src={this.state.next.thumbnails.medium} alt="next" onClick={() => this.updateVideos(true)} />
+                                {/* <img src={this.state.next.thumbnails.medium} alt="next" onClick={() => this.updateVideos(true)} /> */}
+                                <Img alt="next" src={[this.state.next.thumbnails.medium, missing]} loader={<img alt="loading" src={loadPreview} />} onClick={() => this.updateVideos(true)} />
+
                                 <div className="player-next-title">{this.state.next.title}</div>
                             </Link>
                         ) : null}

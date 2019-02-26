@@ -4,12 +4,11 @@ import { Link } from "react-router-dom";
 import { uid } from "react-uid";
 import { fetchFeedVideos } from "../../redux/actions";
 import SimpleStorage from "react-simple-storage";
+
+import Loading from "../../components/loading";
+
 import PreviewItem from "../../components/previewItem";
-
-import AliceCarousel from "react-alice-carousel";
-import "react-alice-carousel/lib/alice-carousel.css";
-
-import loadIcon from "../../images/loading.gif";
+import optionIcon from "../../images/sort.svg";
 
 import "./feed.scss";
 class Feed extends Component {
@@ -26,8 +25,7 @@ class Feed extends Component {
 
         this.state = {
             showMenu: false,
-            currentFeedSelection: currentFeed,
-            responsive: { 0: { items: 1 }, 600: { items: 3 }, 1000: { items: 3 }, 1400: { items: 4 }, 1700: { items: 5 }, 2000: { items: 6 }, 2560: { items: 7 } }
+            currentFeedSelection: currentFeed
         };
     }
 
@@ -62,10 +60,14 @@ class Feed extends Component {
     };
 
     render() {
-        const loadGif = <img src={loadIcon} alt="load icon" />;
+        const loadGif = (
+            <div className="feed-loader">
+                <Loading />
+            </div>
+        );
         let clips;
         if (this.props.clips[this.state.currentFeedSelection] !== undefined) {
-            clips = this.getClips(40);
+            clips = this.getClips(100);
         } else {
             clips = <div>No clips found this {this.state.currentFeedSelection}</div>;
         }
@@ -73,54 +75,23 @@ class Feed extends Component {
         return (
             <section>
                 <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "responsive"]} />
+                <div className="sorting">
+                    <img src={optionIcon} alt="options" />
+                    <span>SORT TOP CLIPS BY</span>
+                    <span className="sort-choice" onClick={this.toggleMenu}>
+                        {this.state.currentFeedSelection}
+                    </span>
+                    {this.state.showMenu ? (
+                        <div className="sort-menu">
+                            <div onClick={() => this.updateMenu("day")}>Day</div>
+                            <div onClick={() => this.updateMenu("week")}>Week</div>
+                            <div onClick={() => this.updateMenu("month")}>Month</div>
+                            <div onClick={() => this.updateMenu("all")}>All</div>
+                        </div>
+                    ) : null}
+                </div>
 
-                <div className="top-title">TOP TWITCH CLIPS TODAY</div>
-                <section className="clips-container-feed">
-                    <AliceCarousel
-                        stagePadding={{
-                            paddingLeft: 50,
-                            paddingRight: 0
-                        }}
-                        infinite={false}
-                        items={[1, 2, 3]}
-                        buttonsDisabled={true}
-                        responsive={this.state.responsive}
-                        mouseDragEnabled>
-                        {this.props.loading ? loadGif : clips}
-                    </AliceCarousel>
-                </section>
-
-                <div className="top-title">TOP YOUTUBE CLIPS TODAY</div>
-                <section className="clips-container-feed">
-                    <AliceCarousel
-                        stagePadding={{
-                            paddingLeft: 50,
-                            paddingRight: 0
-                        }}
-                        infinite={false}
-                        items={[1, 2, 3]}
-                        buttonsDisabled={true}
-                        responsive={this.state.responsive}
-                        mouseDragEnabled>
-                        {this.props.loading ? loadGif : clips}
-                    </AliceCarousel>
-                </section>
-
-                <div className="top-title">STAFF PICKS</div>
-                <section className="clips-container-feed">
-                    <AliceCarousel
-                        stagePadding={{
-                            paddingLeft: 50,
-                            paddingRight: 0
-                        }}
-                        infinite={false}
-                        items={[1, 2, 3]}
-                        buttonsDisabled={true}
-                        responsive={this.state.responsive}
-                        mouseDragEnabled>
-                        {this.props.loading ? loadGif : clips}
-                    </AliceCarousel>
-                </section>
+                <section className="clips-container-feed">{this.props.loading ? loadGif : clips}</section>
             </section>
         );
     }

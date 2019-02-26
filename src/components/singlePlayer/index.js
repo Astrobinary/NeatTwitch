@@ -5,6 +5,8 @@ import { fetchSingleVideo } from "../../redux/actions";
 import "babel-polyfill";
 import Video from "../video";
 
+import Loading from "../loading";
+
 import "./singlePlayer.scss";
 
 class singlePlayer extends Component {
@@ -18,12 +20,12 @@ class singlePlayer extends Component {
         if (this.props.video !== undefined) {
             video = <Video videoInfo={this.props.video} />;
         } else {
-            video = <h1>404</h1>;
+            video = <Loading />;
         }
 
         return (
             <div>
-                <section className="videoplayer">{video}</section>
+                <section className="videoplayer">{this.props.loading ? <Loading /> : video}</section>
             </div>
         );
     }

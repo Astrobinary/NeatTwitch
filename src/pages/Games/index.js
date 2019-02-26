@@ -8,7 +8,8 @@ import { uid } from "react-uid";
 import Img from "react-image";
 import SimpleStorage from "react-simple-storage";
 
-import loadIcon from "../../images/loading.gif";
+import Loading from "../../components/loading";
+
 import optionIcon from "../../images/sort.svg";
 import missingPreview from "../../images/gameload.png";
 import "./games.scss";
@@ -63,8 +64,8 @@ class Games extends Component {
         ));
 
         const loadGif = (
-            <div>
-                <img src={loadIcon} alt="load icon" />
+            <div className="game-loader">
+                <Loading />
             </div>
         );
 

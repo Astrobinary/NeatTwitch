@@ -25,7 +25,7 @@ class singlePlayer extends Component {
 
         return (
             <div>
-                <section className="videoplayer">{this.props.loading ? <Loading /> : video}</section>
+                <section className="single-videoplayer">{this.props.loading ? <Loading /> : video}</section>
             </div>
         );
     }

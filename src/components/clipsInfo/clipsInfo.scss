@@ -54,3 +54,10 @@
     font-weight: 300;
     padding-bottom: 15px;
 }
+
+@media only screen and (max-width: 640px) {
+    .clips-info {
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+}

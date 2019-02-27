@@ -82,3 +82,27 @@
         cursor: pointer;
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .videoplayer {
+        margin-top: 20px;
+    }
+
+    .player-next-icon {
+        padding-top: 1% !important;
+        margin-left: 11% !important;
+    }
+
+    .player-next-title {
+        display: none;
+    }
+
+    .player-prev-title {
+        display: none;
+    }
+
+    .player-prev-icon {
+        padding-top: 1% !important;
+        margin-right: 92.5% !important;
+    }
+}

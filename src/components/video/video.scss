@@ -95,3 +95,36 @@ iframe {
         }
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .player-contain {
+        width: 80%;
+        max-width: 100%;
+    }
+
+    .player-title {
+        font-size: 12px;
+        width: 97%;
+        padding-right: 5px;
+        padding-left: 0px;
+    }
+    .player-logo {
+        img {
+            display: none;
+        }
+    }
+
+    .player-info-right {
+        padding-top: 5px;
+    }
+
+    .player-bar {
+        display: block;
+        height: 100px;
+    }
+    .player-name {
+        font-size: 9px;
+        width: 80vw;
+        margin-top: 5px;
+    }
+}

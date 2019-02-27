@@ -97,3 +97,26 @@
     z-index: 100;
     font-weight: 500 !important;
 }
+
+@media only screen and (max-width: 640px) {
+    .top-bar {
+        top: 75px;
+        left: 0;
+    }
+    .sorting {
+        justify-content: center;
+        span {
+            font-size: 12px;
+        }
+    }
+    .sort-menu {
+        font-size: 12px;
+        div {
+            display: block;
+        }
+    }
+
+    .sort-choice {
+        border-bottom: none;
+    }
+}

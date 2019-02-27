@@ -5,22 +5,22 @@ class loading extends Component {
     render() {
         return (
             <div className="load-container">
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
-                <div class="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
+                <div className="block" />
             </div>
         );
     }

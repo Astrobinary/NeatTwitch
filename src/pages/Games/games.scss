@@ -39,3 +39,14 @@
         }
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .games-item {
+        flex-direction: row;
+        padding: 0px 0px;
+        padding-bottom: 20px;
+        img {
+            width: auto;
+        }
+    }
+}

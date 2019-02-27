@@ -63,27 +63,6 @@ Pink Highlight: #ed4f74
     }
 }
 
-.mobile-nav-item {
-    flex-grow: 5;
-    text-align: center;
-    line-height: 45px;
-    color: white;
-    text-decoration: none;
-    letter-spacing: 4px;
-    font-size: 10px;
-    font-weight: 400;
-    transition: all 0.3s ease;
-    height: 50px;
-    margin-top: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    pointer-events: all;
-    opacity: 0.8;
-
-    &:hover {
-        border-bottom: 1px solid #ed4f74;
-    }
-}
-
 .nav-search {
     display: flex;
     flex-grow: 5;
@@ -152,9 +131,6 @@ Pink Highlight: #ed4f74
     }
 }
 
-.selected {
-    border-bottom: 1px solid #0fa5a5;
-}
 .mobile-links {
     display: flex;
     width: 100vw;
@@ -163,6 +139,23 @@ Pink Highlight: #ed4f74
     margin-bottom: -115px;
     background: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%, black 100%);
     pointer-events: none;
+}
+
+.mobile-nav-item {
+    flex-grow: 5;
+    text-align: center;
+    line-height: 45px;
+    color: white;
+    text-decoration: none;
+    letter-spacing: 4px;
+    font-size: 10px;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    height: 50px;
+    margin-top: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: all;
+    opacity: 0.8;
 }
 .mobile-logo {
     flex-grow: 2;
@@ -178,6 +171,10 @@ Pink Highlight: #ed4f74
     pointer-events: all;
     opacity: 0.8;
     transition: all 0.3s ease;
+}
+
+.selected {
+    border-bottom: 1px solid #0fa5a5;
 }
 @media only screen and (max-width: 640px) {
     .Navagation-mobile {

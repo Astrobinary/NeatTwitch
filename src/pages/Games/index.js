@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchGames, fetchMoreGames } from "../../redux/actions";
+import { fetchGames, fetchMoreGames } from "../../redux/actions/videoActions";
 import Waypoint from "react-waypoint";
 import LazyLoad from "react-lazyload";
 import { uid } from "react-uid";

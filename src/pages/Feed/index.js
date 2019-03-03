@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { uid } from "react-uid";
-import { fetchFeedVideos } from "../../redux/actions";
+import { fetchFeedVideos } from "../../redux/actions/videoActions";
 import SimpleStorage from "react-simple-storage";
 
 import Loading from "../../components/loading";

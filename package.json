@@ -5,6 +5,8 @@
     "dependencies": {
         "axios": "^0.18.0",
         "babel-polyfill": "^6.26.0",
+        "firebase": "^5.8.4",
+        "firebase-admin": "^7.0.0",
         "immutability-helper": "^2.8.1",
         "moment": "^2.22.2",
         "node-sass": "^4.10.0",
@@ -14,6 +16,7 @@
         "react-image": "^1.5.1",
         "react-lazyload": "^2.3.0",
         "react-redux": "^5.1.1",
+        "react-redux-firebase": "^2.2.6",
         "react-router": "^4.3.1",
         "react-router-dom": "^4.3.1",
         "react-scripts": "^2.1.5",
@@ -21,6 +24,7 @@
         "react-uid": "^2.2.0",
         "react-waypoint": "^8.1.0",
         "redux": "^4.0.1",
+        "redux-firestore": "^0.7.0",
         "redux-thunk": "^2.3.0"
     },
     "scripts": {

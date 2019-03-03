@@ -5,6 +5,14 @@ import searchIcon from "../../images/search.svg";
 import loginIcon from "../../images/login.svg";
 import "./nav_new.scss";
 
+import serviceAccount from "../../config/admin.json";
+var admin = require("firebase-admin");
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: "https://liveclips-2b478.firebaseio.com"
+// });
+
 class navagation extends Component {
     constructor(props) {
         super(props);
@@ -15,8 +23,46 @@ class navagation extends Component {
     }
 
     toggleMenu = () => {
-        console.log("clicked");
         this.setState({ showMenu: !this.state.showMenu });
+    };
+
+    twitchAuth = async () => {
+        const clientId = "15c6l9641yo97kt42nnsa51vrwp70y";
+        const redirectUri = "http://localhost:3000/feed";
+
+        const codeUri = `https://id.twitch.tv/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid`;
+
+        const code = await this.getCode(codeUri);
+        const tokenUri = `/twitchAuth?${code}`;
+        return await this.getAuthToken(tokenUri);
+    };
+
+    getAuthToken = async id => {
+        // try {
+        //     const token = await admin.auth().createCustomToken(id);
+        //     return token;
+        // } catch (err) {
+        //     throw err;
+        // }
+    };
+
+    getCode = uri => {
+        return new Promise((resolve, reject) => {
+            const authWindow = window.open(uri, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,width=500,height=750");
+
+            let url = "";
+
+            setInterval(async () => {
+                try {
+                    url = authWindow && authWindow.location && authWindow.location.search;
+                } catch (e) {}
+                if (url) {
+                    const code = url.substring(1);
+                    authWindow.close();
+                    resolve(code);
+                }
+            }, 500);
+        });
     };
 
     render() {
@@ -48,10 +94,10 @@ class navagation extends Component {
                         <input />
                     </div>
 
-                    <Link className="nav-login" to="/about">
+                    <div className="nav-login" onClick={this.twitchAuth}>
                         <img src={loginIcon} alt={"login"} />
                         <span>login</span>
-                    </Link>
+                    </div>
                 </nav>
 
                 <nav className="Navagation-mobile">

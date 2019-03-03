@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchStreamVideos, fetchGameVideos } from "../../redux/actions";
+import { fetchStreamVideos, fetchGameVideos } from "../../redux/actions/videoActions";
 
 import { uid } from "react-uid";
 import SimpleStorage from "react-simple-storage";

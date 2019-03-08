@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import firebase from "firebase/app";
 import "./login.scss";
+import Axios from "axios";
+require("firebase/functions");
 
 class LogIn extends Component {
     state = {
@@ -7,9 +10,13 @@ class LogIn extends Component {
         password: ""
     };
 
+    componentDidMount() {}
+
+    doAuth = () => {};
+
     handleSubmit = e => {
         e.preventDefault();
-        console.log(this.state);
+        this.AuthenticateWithTwitch();
     };
 
     handleChange = e => {
@@ -36,6 +43,8 @@ class LogIn extends Component {
                         <button>Login</button>
                     </div>
                 </form>
+
+                <div onClick={this.getURLParameter}>click me</div>
             </section>
         );
     }

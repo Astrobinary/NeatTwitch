@@ -81,7 +81,7 @@ class playlistPlayer extends Component {
                     </div>
                 </section>
 
-                <Comments />
+                {/* <Comments /> */}
             </div>
         );
     }

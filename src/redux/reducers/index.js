@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import { firestoreReducer } from "redux-firestore";
+import { firebaseReducer } from "react-redux-firebase";
 
 import authsReducer from "./authsReducer";
 import gamesReducer from "./gamesReducer";
@@ -11,7 +12,8 @@ const AppReducer = combineReducers({
     feedsReducer,
     streamersReducer,
     gamesReducer,
-    firestoreReducer
+    firestoreReducer,
+    firebaseReducer
 });
 
 export default AppReducer;

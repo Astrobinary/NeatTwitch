@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { FETCH_FEED_REQUEST, FETCH_FEED_SUCCESS, FETCH_FEED_FAILURE, FETCH_SINGLE_REQUEST, FETCH_SINGLE_SUCCESS, FETCH_SINGLE_FAILURE } from "../actions";
+import { FETCH_FEED_REQUEST, FETCH_FEED_SUCCESS, FETCH_FEED_FAILURE, FETCH_SINGLE_REQUEST, FETCH_SINGLE_SUCCESS, FETCH_SINGLE_FAILURE } from "../actions/videoActions";
 
 const initialState = {
     loading: false,

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchSingleVideo } from "../../redux/actions";
+import { fetchSingleVideo } from "../../redux/actions/videoActions";
 
 import "babel-polyfill";
 import Video from "../video";

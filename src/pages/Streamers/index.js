@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchStreamers, fetchMoreStreamers } from "../../redux/actions";
+import { fetchStreamers, fetchMoreStreamers } from "../../redux/actions/videoActions";
 import { Link } from "react-router-dom";
 import { uid } from "react-uid";
 import "./streamers.scss";

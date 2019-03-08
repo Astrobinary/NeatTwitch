@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { FETCH_GAMES_REQUEST, FETCH_GAMES_SUCCESS, FETCH_GAMES_FAILURE, FETCH_GAME_TOP_REQUEST, FETCH_GAME_TOP_SUCCESS, FETCH_GAME_TOP_FAILURE } from "../actions";
+import { FETCH_GAMES_REQUEST, FETCH_GAMES_SUCCESS, FETCH_GAMES_FAILURE, FETCH_GAME_TOP_REQUEST, FETCH_GAME_TOP_SUCCESS, FETCH_GAME_TOP_FAILURE } from "../actions/videoActions";
 
 const initialState = {
     games: [],

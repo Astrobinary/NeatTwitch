@@ -26,17 +26,16 @@ class previewItem extends Component {
 
         return (
             <div className="preview-item" onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
-                {this.state.isHovered && (
-                    <div className="preview-top-banner">
-                        <img className="preview-logo-corner" src={this.props.video.broadcaster.logo} alt="logo" />
-                        <div className="preview-view-container">
-                            <div className="preview-view-count">{this.props.video.views.toLocaleString()}</div>
-                            <div className="preview-view-count">{this.props.video.broadcaster.name}</div>
-                        </div>
-
-                        <span className="preview-date-added">{moment(this.props.video.created_at).fromNow()}</span>
+                <div className="preview-top-banner">
+                    <img className="preview-logo-corner" src={this.props.video.broadcaster.logo} alt="logo" />
+                    <div className="preview-view-container">
+                        <div className="preview-view-count">{this.props.video.views.toLocaleString()}</div>
+                        <div className="preview-view-count">{this.props.video.broadcaster.name}</div>
                     </div>
-                )}
+
+                    <span className="preview-date-added">{moment(this.props.video.created_at).fromNow()}</span>
+                </div>
+
                 {image}
                 <div className="preview-name">{this.props.video.title}</div>
             </div>

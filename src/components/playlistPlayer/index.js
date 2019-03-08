@@ -6,7 +6,7 @@ import { uid } from "react-uid";
 
 import Backto from "../backto";
 import Video from "../video";
-import Comments from "../comments";
+// import Comments from "../comments";
 
 import loadPreview from "../../images/previewNot.png";
 import missing from "../../images/missing_big.png";

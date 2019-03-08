@@ -16,7 +16,6 @@ import Feed from "./pages/Feed";
 import Streamers from "./pages/Streamers";
 import Games from "./pages/Games";
 import Playlists from "./pages/Playlists";
-import LogIn from "./pages/LogIn";
 
 import _PreviewContainer from "./components/previewContainer";
 import _playlistPlayer from "./components/playlistPlayer";
@@ -50,8 +49,6 @@ const Index = () => (
                     <Route exact path="/games/:gameID/:videoID" component={_playlistPlayer} />
 
                     <Route exact path="/playlists" component={Playlists} />
-
-                    <Route exact path="/login" component={LogIn} />
 
                     <Route exact path="/:videoID" component={_singlePlayer} />
                 </Switch>

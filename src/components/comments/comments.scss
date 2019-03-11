@@ -2,7 +2,110 @@
     margin: 0 auto;
     margin-top: 100px;
     text-align: center;
-    width: 70%;
-    height: auto;
-    background-color: white;
+    max-width: 55%;
+    margin-bottom: 25px;
+}
+
+.comment-output {
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.5);
+    width: calc(100% + 45px);
+    padding: 10px;
+    text-align: left;
+    color: white;
+    font-size: 13px;
+    margin-left: -65px;
+    text-indent: 55px;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    font-weight: 100;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+
+    img{
+        margin-bottom: -5px;
+    }
+   
+}
+
+.comment-user {
+    width: 100%;
+    display: flex;
+    margin: 20px 0;
+    .comment-avatar {
+        width: 50px;
+        height: 50px;
+        padding-left: 10px;
+        margin-right: -10px;
+        z-index: 1;
+    }
+
+    .comment-message {
+        width: 100%;
+        padding-left: 20px;
+
+        .comment-username {
+            text-align: left;
+            color: white;
+            font-size: 16px;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            padding-bottom: 5px;
+
+            span {
+                color: #0fa5a5;
+                font-weight: bold;
+                font-size: 12px;
+            }
+        }
+
+        .btn-contain {
+            width: 100%;
+            margin-left: -20px;
+            margin: 0 auto;
+        }
+        button {
+            outline: none;
+            border: none;
+            background-color: rgba(0, 0, 0, 0.4);
+            width: 100px;
+            height: 25px;
+            float: right;
+            color: rgba(255, 255, 255, 0.3);
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            &:hover {
+                color: rgba(255, 255, 255, 0.8);
+            }
+        }
+        textarea {
+            width: calc(100% + 8px);
+            height: 95px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: none;
+            color: white;
+            vertical-align: top;
+            padding: 5px;
+            resize: none;
+            box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.75);
+            margin-left: -20px;
+            &::placeholder {
+                color: white;
+                opacity: 0.6;
+            }
+            // margin: 5px;
+        }
+    }
+}
+
+.comment-jump {
+    width: 100%;
+    margin: 25px 0;
+    border-bottom: 2px solid #0fa5a5;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: left;
+    letter-spacing: 2px;
+    font-weight: 500;
 }

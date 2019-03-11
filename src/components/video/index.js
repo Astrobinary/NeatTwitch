@@ -53,7 +53,9 @@ class video extends Component {
                         </div>
 
                         <div className="player-title">
-                            <div className="player-title-text">{this.props.videoInfo.title}</div>
+                            <div className="player-title-text" title={this.props.videoInfo.title}>
+                                {this.props.videoInfo.title}
+                            </div>
                             <div className="player-name">
                                 <div className="player-link">
                                     <Link to={"/streamers/" + this.props.videoInfo.broadcaster.name}>{this.props.videoInfo.broadcaster.display_name}</Link>
@@ -68,16 +70,16 @@ class video extends Component {
                     </div>
                     <div className="player-info-right">
                         <div className="player-icons">
-                            <img src={likeIcon} alt="like icon" />
-                            <img src={shareIcon} alt="share icon" />
+                            <img src={likeIcon} alt="like icon" title="like" />
+                            <img src={shareIcon} alt="share icon" title="share" />
                             {this.props.videoInfo.vod ? (
                                 <a href={this.props.videoInfo.vod.url} target="_blank" rel="noopener noreferrer">
-                                    <img src={vodIcon} alt="vod icon" />
+                                    <img src={vodIcon} alt="vod icon" title="vod" />
                                 </a>
                             ) : null}
 
                             <a href={this.getMp4()} download target="_blank" rel="noopener noreferrer">
-                                <img src={downloadIcon} alt="download icon" />
+                                <img src={downloadIcon} alt="download icon" title="download" />
                             </a>
                         </div>
                     </div>

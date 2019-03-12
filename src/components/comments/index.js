@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createComment, fetchComments } from "../../redux/actions/commentActions";
 import "./comments.scss";
-import { uid } from "react-uid";
+import uuid from "uuid";
 import emotes from "./emotes.json";
 const ReactMarkdown = require("react-markdown");
 
@@ -58,7 +58,7 @@ class Comments extends Component {
         };
 
         this.props.comments[this.props.videoID].unshift(temp);
-        this.props.createComment(this.state.message, this.props.videoID);
+        this.props.createComment(temp.message, this.props.videoID);
         this.updateComments();
     };
 
@@ -67,18 +67,28 @@ class Comments extends Component {
 
         let matches = text.match(regex);
 
-        if (matches.length > 0) {
+        let confirmed = [];
+        let replaced = text;
+
+        if (matches !== null) {
             matches.forEach(element => {
                 if (emotes[element.slice(1, -1)] !== undefined) {
+                    const word = element.slice(1, -1);
                     const id = emotes[element.slice(1, -1)].id;
-                    console.log(`https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0`);
+                    confirmed.push({ [element]: `![${word}](https://static-cdn.jtvnw.net/emoticons/v1/${id}/1.0 "${word}")` });
                 }
             });
+
+            confirmed.forEach(match => {
+                const key = Object.keys(match)[0];
+                const value = Object.values(match)[0];
+                replaced = replaced.replace(key, value);
+            });
+
+            return replaced;
         } else {
             return text;
         }
-
-        return text;
     };
 
     updateComments = () => {
@@ -98,7 +108,7 @@ class Comments extends Component {
         } else {
             if (this.props.comments[this.props.videoID].length === 0) return <div style={{ color: "white", textAlign: "left", opacity: "0.6" }}>Be the first to comment!</div>;
             return this.props.comments[this.props.videoID].map(x => (
-                <div className="comment-user" key={uid(x.messageId)}>
+                <div className="comment-user" key={uuid.v4()}>
                     <img className="comment-avatar" src={x.avatar} alt="icon" />
                     <div className="comment-message">
                         <div className="comment-username" htmlFor="message">
@@ -106,7 +116,6 @@ class Comments extends Component {
                             <span>+{x.points}</span>
                         </div>
                         <ReactMarkdown className="comment-output" source={x.message} disallowedTypes={["link", "heading", "thematicBreak", "linkReference", "table", "paragraph"]} unwrapDisallowed />
-                        {/* <div  dangerouslySetInnerHTML={{ __html: this.parseText(x.message) }} /> */}
                         <button id="submit" onClick={this.handleSubmit} disabled>
                             reply
                         </button>

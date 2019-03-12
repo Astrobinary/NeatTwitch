@@ -4,10 +4,10 @@ const initialState = { loading: false, error: null };
 const commentsReducer = (state = initialState, action) => {
     switch (action.type) {
         case "CREATE_COMMENT_SUCCESS":
-            console.log("bacon");
-            return state;
+            return update(state, {
+                [action.payload.videoId]: { $unshift: [action.payload.post] }
+            });
         case "CREATE_COMMENT_FAILED":
-            console.log("comment error: ", action.err);
             return state;
         case "GET_COMMENT_SUCCESS":
             let state2;
@@ -26,8 +26,29 @@ const commentsReducer = (state = initialState, action) => {
                 ...obj
             };
         case "GET_COMMENT_FAILED":
-            console.log("comment error: ", action.err);
-            return state;
+            return {
+                ...state,
+                loading: false,
+                error: action.err
+            };
+
+        case "VOTE_SUCCESS":
+            const points = state[action.payload.videoId][action.payload.index];
+            const newPoints = update(points, {
+                points: { $set: action.payload.newPoints }
+            });
+            return update(state, {
+                [action.payload.videoId]: {
+                    [action.payload.index]: { $set: newPoints }
+                }
+            });
+
+        case "VOTE_FAILED":
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
         default:
             return state;
     }

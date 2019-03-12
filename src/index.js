@@ -24,6 +24,8 @@ import Navagation from "./components/navigation";
 
 import "./global.scss";
 
+// require("typeface-montserrat");
+
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 let store = createStore(AppReducer, composeEnhancer(applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })), reduxFirestore(firebaseconfig), reactReduxFirebase(firebaseconfig)));
 

@@ -19,11 +19,38 @@
     letter-spacing: 2px;
     opacity: 0.8;
     font-weight: 100;
-    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    text-shadow: 0px 0px 5px #000;
 
     img {
         margin-bottom: -5px;
         width: 20px;
+    }
+}
+
+.comment-vote {
+    margin-left: -30px;
+    width: 30px;
+    margin-top: 17px;
+
+    color: white;
+    font-size: 12px;
+
+    img {
+        width: 20px;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+        &:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+    }
+
+    .comment-points {
+        margin-top: -5px;
+        text-align: center;
+        margin-left: 1px;
+        opacity: 0.5;
+        user-select: none;
     }
 }
 
@@ -50,36 +77,74 @@
             letter-spacing: 2px;
             opacity: 0.8;
             padding-bottom: 5px;
-
+            text-shadow: 0px 0px 5px #000;
             span {
                 color: #0fa5a5;
                 font-weight: bold;
                 font-size: 12px;
+                text-shadow: 0px 0px 1px #000;
+            }
+        }
+
+        .com {
+            margin-left: -65px !important;
+            width: calc(100% + 65px) !important;
+
+            img {
+                margin-bottom: -2px !important;
+                opacity: 0.4;
             }
         }
 
         .btn-contain {
-            width: 100%;
-            margin-left: -20px;
-            margin: 0 auto;
-        }
-        button {
-            outline: none;
-            border: none;
-            background-color: rgba(0, 0, 0, 0.4);
-            width: 100px;
-            height: 25px;
-            float: right;
-            color: rgba(255, 255, 255, 0.3);
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-            cursor: pointer;
-            z-index: 100;
-            transition: all 0.3s ease;
-            &:hover {
-                color: rgba(255, 255, 255, 0.8);
+            width: calc(100% + 18px);
+            margin-left: -19px;
+            height: 20px;
+            background-color: #00000096;
+
+            .btn-by {
+                float: left;
+                font-size: 10px;
+                color: white;
+                letter-spacing: 3px;
+                opacity: 0.4;
+                margin-left: 10px;
+                line-height: 20px;
+            }
+
+            .btn-post {
+                z-index: 100;
+                outline: none;
+                border: none;
+                width: 100px;
+                height: 100%;
+                color: rgba(255, 255, 255, 0.3);
+                background: none;
+                transition: all 0.3s ease;
+                letter-spacing: 3px;
+                float: right;
+                cursor: pointer;
+                div {
+                    display: inline-block;
+                    line-height: 18px;
+                    font-size: 12px;
+                    vertical-align: super;
+                }
+
+                .btn-icon {
+                    width: 13px;
+                    margin-right: 10px;
+                    img {
+                        margin-bottom: -4px;
+                    }
+                }
+                &:hover {
+                    color: rgba(255, 255, 255, 0.8);
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
             }
         }
+
         textarea {
             width: calc(100% + 8px);
             height: 95px;
@@ -95,7 +160,10 @@
                 color: white;
                 opacity: 0.6;
             }
-            // margin: 5px;
+
+            &:focus {
+                outline: none;
+            }
         }
     }
 }

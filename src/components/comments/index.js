@@ -27,8 +27,13 @@ class Comments extends Component {
         });
     };
 
-    userVote = (messageId, videoID, index, direction) => {
-        this.props.commentVote(messageId, videoID, index, direction);
+    userVote = (messageId, videoID, index, direction, voter, voted) => {
+        if (this.hasVoted(voted, voter)) return;
+        this.props.commentVote(messageId, videoID, index, direction, voter);
+    };
+
+    hasVoted = (voted, voter) => {
+        return voted.includes(voter);
     };
 
     getComments = () => {
@@ -40,14 +45,14 @@ class Comments extends Component {
             return this.props.comments[this.props.videoID].map((x, index) => (
                 <div className="comment-user" key={uuid.v4()}>
                     <div className="comment-vote">
-                        <div className="comment-up" onClick={() => this.userVote(x.messageId, this.props.videoID, index, "up")}>
-                            <img src={up} alt="upvote" />
+                        <div className="comment-up" onClick={() => this.userVote(x.messageId, this.props.videoID, index, "up", this.props.auth.uid, x.voted)}>
+                            {this.hasVoted(x.voted, this.props.auth.uid) ? <img src={up} alt="upvote" style={{ cursor: "not-allowed" }} /> : <img src={up} alt="upvote" />}
                         </div>
                         <div className="comment-points" id="points">
                             {this.props.comments[this.props.videoID][index].points}
                         </div>
-                        <div className="comment-down" onClick={() => this.userVote(x.messageId, this.props.videoID, index, "down")}>
-                            <img src={down} alt="downvote" />
+                        <div className="comment-down" onClick={() => this.userVote(x.messageId, this.props.videoID, index, "down", this.props.auth.uid, x.voted)}>
+                            {this.hasVoted(x.voted, this.props.auth.uid) ? <img src={down} alt="downvote" style={{ cursor: "not-allowed" }} /> : <img src={down} alt="downvote" />}
                         </div>
                     </div>
                     <img className="comment-avatar" src={x.avatar} alt="icon" />
@@ -93,7 +98,7 @@ const mapDispatchToProps = dispatch => {
     return {
         createComment: (comment, id) => dispatch(createComment(comment, id)),
         fetchComments: id => dispatch(fetchComments(id)),
-        commentVote: (messageId, videoID, index, direction) => dispatch(userVote(messageId, videoID, index, direction))
+        commentVote: (messageId, videoID, index, direction, voter) => dispatch(userVote(messageId, videoID, index, direction, voter))
     };
 };
 

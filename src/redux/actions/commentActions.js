@@ -17,6 +17,7 @@ export const createComment = (message, videoId) => {
             timestamp: Date.now(),
             // createdAt: firestore.FieldValue.serverTimestamp().toDate(),
             points: 0,
+            voted: [],
             messageId: randomId
         };
 
@@ -82,7 +83,7 @@ export const fetchComments = id => {
     };
 };
 
-export const userVote = (messageId, videoId, index, direction) => {
+export const userVote = (messageId, videoId, index, direction, voter) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         let newPoints;
@@ -106,7 +107,9 @@ export const userVote = (messageId, videoId, index, direction) => {
                         newPoints = sfDoc.data().points - 1;
                     }
 
-                    transaction.update(sfDocRef, { points: newPoints });
+                    let voting = sfDoc.data().voted.push(voter);
+
+                    transaction.update(sfDocRef, { points: newPoints, voted: firestore.FieldValue.arrayUnion(voter) });
                 });
             })
             .then(() => {
@@ -114,7 +117,8 @@ export const userVote = (messageId, videoId, index, direction) => {
                     messageId,
                     videoId,
                     index,
-                    newPoints
+                    newPoints,
+                    voter
                 };
 
                 dispatch({ type: "VOTE_SUCCESS", payload });

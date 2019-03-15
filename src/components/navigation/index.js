@@ -34,8 +34,6 @@ class navagation extends Component {
 
     getCode = uri => {
         return new Promise((resolve, reject) => {
-            const top = 80;
-            console.log(top);
             const left = window.innerHeight - 350;
 
             const authWindow = window.open(uri, "_blank", `toolbar=no,resizable=yes,width=500,height=700,left=${left}`);

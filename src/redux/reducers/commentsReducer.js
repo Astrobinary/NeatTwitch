@@ -33,13 +33,26 @@ const commentsReducer = (state = initialState, action) => {
             };
 
         case "VOTE_SUCCESS":
-            const points = state[action.payload.videoId][action.payload.index];
-            const newPoints = update(points, {
-                points: { $set: action.payload.newPoints }
-            });
+            const index = state[action.payload.videoId][action.payload.index];
+            // const newPoints = update(index, {
+            //     points: { $set: action.payload.newPoints }
+            // });
+
+            console.log(action.payload.voter);
+            console.log(state[action.payload.videoId][action.payload.index]);
+
+            // const newVoter = update(index, {
+            //     voted: { $push: action.payload.voter }
+            // });
+
+            // console.log(action.payload.voter);
+
             return update(state, {
                 [action.payload.videoId]: {
-                    [action.payload.index]: { $set: newPoints }
+                    [action.payload.index]: {
+                        voted: { $push: [action.payload.voter] },
+                        points: { $set: action.payload.newPoints }
+                    }
                 }
             });
 

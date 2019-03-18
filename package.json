@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "array-to-tree": "^3.3.0",
         "axios": "^0.18.0",
         "babel-polyfill": "^6.26.0",
         "cookie-parser": "^1.4.4",
@@ -32,6 +33,7 @@
         "redux": "^4.0.1",
         "redux-firestore": "^0.7.0",
         "redux-thunk": "^2.3.0",
+        "shortid": "^2.2.14",
         "typeface-montserrat": "0.0.54",
         "uuid": "^3.3.2"
     },

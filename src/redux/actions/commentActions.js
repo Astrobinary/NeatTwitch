@@ -1,44 +1,45 @@
-import uuid from "uuid";
+const shortid = require("shortid");
+const arrayToTree = require("array-to-tree");
 
-export const createComment = (message, videoId) => {
+export const createComment = (message, videoID, parent) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         const firebase = getFirebase().auth();
 
-        console.log(firebase);
+        const randomId = shortid.generate();
 
-        let randomId = uuid.v4();
+        if (parent === undefined) parent = null;
 
         let post = {
             message,
+            videoID,
+            messageID: randomId,
             author: firebase.currentUser.displayName,
             avatar: firebase.currentUser.photoURL,
             uid: firebase.currentUser.uid,
             timestamp: Date.now(),
-            // createdAt: firestore.FieldValue.serverTimestamp().toDate(),
             points: 0,
             voted: [],
-            messageId: randomId
+            parent: parent
         };
 
         let payload = {
             post,
-            videoId
+            videoID
         };
 
         firestore
             .collection("videos")
-            .doc(videoId)
-            .set({ videoId, comments: {} })
+            .doc(videoID)
+            .set({ videoID, comments: {} })
             .then(() => {
                 firestore
                     .collection("videos")
-                    .doc(videoId)
+                    .doc(videoID)
                     .collection("comments")
                     .doc(randomId)
                     .set({ ...post })
                     .then(() => {
-                        console.log("Made it here");
                         dispatch({ type: "CREATE_COMMENT_SUCCESS", payload });
                     })
                     .catch(err => {
@@ -68,12 +69,15 @@ export const fetchComments = id => {
                 doc.forEach(snap => {
                     if (snap.exists) temp.push(snap.data());
                 });
-                comments[id] = temp;
+                comments[id] = arrayToTree(temp, {
+                    parentProperty: "parent",
+                    customID: "messageID"
+                });
 
                 dispatch({
                     type: "GET_COMMENT_SUCCESS",
                     comments,
-                    videoid: id
+                    videoID: id
                 });
                 return comments;
             })
@@ -83,14 +87,14 @@ export const fetchComments = id => {
     };
 };
 
-export const userVote = (messageId, videoId, index, direction, voter) => {
+export const userVote = (messageId, videoID, index, direction, voter) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         let newPoints;
 
         var sfDocRef = firestore
             .collection("videos")
-            .doc(videoId)
+            .doc(videoID)
             .collection("comments")
             .doc(messageId);
 
@@ -107,15 +111,13 @@ export const userVote = (messageId, videoId, index, direction, voter) => {
                         newPoints = sfDoc.data().points - 1;
                     }
 
-                    let voting = sfDoc.data().voted.push(voter);
-
                     transaction.update(sfDocRef, { points: newPoints, voted: firestore.FieldValue.arrayUnion(voter) });
                 });
             })
             .then(() => {
                 const payload = {
                     messageId,
-                    videoId,
+                    videoID,
                     index,
                     newPoints,
                     voter

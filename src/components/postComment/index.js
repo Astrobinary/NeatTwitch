@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createComment } from "../../redux/actions/commentActions";
-// import "./comments.scss";
+import "./postComment.scss";
 import emotes from "./emotes.json";
 
 import postIcon from "../../images/post.svg";
@@ -9,8 +9,23 @@ import postIcon from "../../images/post.svg";
 class PostComment extends Component {
     state = {
         message: "",
-        canPost: true
+        canPost: true,
+        postText: "post"
     };
+
+    componentWillMount() {
+        this.inputContainer = React.createRef();
+        this.textInput = React.createRef();
+    }
+
+    componentDidMount() {
+        if (this.props.reply) {
+            this.inputContainer.current.style.width = "calc(100% - 65px)";
+            this.inputContainer.current.style.marginLeft = "65px";
+        }
+
+        console.log(this.props);
+    }
 
     componentDidUpdate(prevProps) {
         if (this.props.videoID !== prevProps.videoID) {
@@ -18,45 +33,17 @@ class PostComment extends Component {
         }
     }
 
-    onRouteChanged = () => {
-        console.log("route changed");
-
-        const textArea = document.getElementById("message");
-        const postBtn = document.getElementById("submit");
-
-        if (textArea === null) return;
-        postBtn.innerHTML = "reply";
-        postBtn.disabled = false;
-        textArea.disabled = false;
-        textArea.style.opacity = 1;
-        postBtn.style.opacity = 1;
-        textArea.value = "";
-
-        this.setState({ message: "", canPost: true });
+    handleChange = e => {
+        e.preventDefault();
+        this.setState({
+            [e.target.id]: e.target.value
+        });
     };
 
-    handleSubmit = e => {
-        if (!this.state.canPost) return;
-        const textArea = document.getElementById("message");
-        const postBtn = document.getElementById("submit");
-        if (!/\S/.test(this.state.message)) return (postBtn.innerHTML = "add text?");
-
-        postBtn.innerHTML = "posted!";
-        postBtn.disabled = true;
-        textArea.disabled = true;
-        textArea.style.opacity = 0.5;
-        postBtn.style.opacity = 0.5;
-
-        let parsedMessage = this.parseText(this.state.message);
-
-        const temp = {
-            message: parsedMessage,
-            avatar: this.props.auth.photoURL,
-            author: this.props.auth.displayName,
-            points: 0
-        };
-
-        this.props.createComment(temp.message, this.props.videoID);
+    onRouteChanged = () => {
+        this.setState({ message: "", canPost: true, postText: "post" });
+        this.textInput.current.disabled = false;
+        this.textInput.current.style.opacity = "1";
     };
 
     parseText = text => {
@@ -88,27 +75,38 @@ class PostComment extends Component {
         }
     };
 
-    handleChange = e => {
-        e.preventDefault();
-        this.setState({
-            [e.target.id]: e.target.value
-        });
+    handleSubmit = e => {
+        if (!this.state.canPost) return;
+        if (!/\S/.test(this.state.message)) return this.setState({ postText: "add text?" });
+        this.textInput.current.disabled = true;
+        this.textInput.current.style.opacity = "0.4";
+        let parsedMessage = this.parseText(this.state.message);
+
+        const temp = {
+            message: parsedMessage,
+            avatar: this.props.auth.photoURL,
+            author: this.props.auth.displayName,
+            points: 0
+        };
+
+        // message, videoID, msgID, index
+
+        this.setState({ canPost: false, postText: "posted!" });
+        this.props.createComment(temp.message, this.props.videoID, this.props.parent);
     };
 
     render() {
         return (
-            <section className="comments-contain">
+            <section className="post-contain" ref={this.inputContainer}>
                 {!this.props.auth.isEmpty ? (
-                    <div className="comment-user">
-                        <div className="comment-message">
-                            <textarea className="comment-input" type="text" id="message" onChange={this.handleChange} placeholder="Enter witty comment here..." />
-                            <div className="btn-contain">
-                                <div className="btn-post" onClick={this.handleSubmit}>
-                                    <div className="btn-icon">
-                                        <img src={postIcon} alt="post" />
-                                    </div>
-                                    <div id="submit">post</div>
+                    <div className="post-message" style={{ marginLeft: `${this.props.count > 1 ? (this.props.count - 1) * 65 : 0}px`, width: `calc(100% - ${this.props.count > 1 ? (this.props.count - 1) * 65 : 0}px)` }}>
+                        <textarea ref={this.textInput} className="post-input" type="text" id="message" onChange={this.handleChange} placeholder={this.props.placeHolder} value={this.state.message} />
+                        <div className="post-menu-contain">
+                            <div className="post-menu-post" onClick={this.handleSubmit}>
+                                <div className="post-menu-icon">
+                                    <img src={postIcon} alt="post" />
                                 </div>
+                                <div id="submit">{this.state.postText}</div>
                             </div>
                         </div>
                     </div>
@@ -127,7 +125,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createComment: (comment, id) => dispatch(createComment(comment, id))
+        createComment: (comment, id, parent) => dispatch(createComment(comment, id, parent))
     };
 };
 

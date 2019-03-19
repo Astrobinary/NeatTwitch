@@ -10,6 +10,7 @@ class PostComment extends Component {
     state = {
         message: "",
         canPost: true,
+        posted: false,
         postText: "post"
     };
 
@@ -23,8 +24,6 @@ class PostComment extends Component {
             this.inputContainer.current.style.width = "calc(100% - 65px)";
             this.inputContainer.current.style.marginLeft = "65px";
         }
-
-        console.log(this.props);
     }
 
     componentDidUpdate(prevProps) {
@@ -33,17 +32,16 @@ class PostComment extends Component {
         }
     }
 
+    onRouteChanged = () => {
+        this.textInput.current.disabled = false;
+        this.textInput.current.style.opacity = "0.8";
+        this.setState({ message: "", canPost: true, postText: "post" });
+    };
     handleChange = e => {
         e.preventDefault();
         this.setState({
             [e.target.id]: e.target.value
         });
-    };
-
-    onRouteChanged = () => {
-        this.setState({ message: "", canPost: true, postText: "post" });
-        this.textInput.current.disabled = false;
-        this.textInput.current.style.opacity = "1";
     };
 
     parseText = text => {
@@ -91,7 +89,7 @@ class PostComment extends Component {
 
         // message, videoID, msgID, index
 
-        this.setState({ canPost: false, postText: "posted!" });
+        this.setState({ canPost: false, postText: "posted!", posted: true, post: { ...temp } });
         this.props.createComment(temp.message, this.props.videoID, this.props.parent);
     };
 
@@ -99,7 +97,7 @@ class PostComment extends Component {
         return (
             <section className="post-contain" ref={this.inputContainer}>
                 {!this.props.auth.isEmpty ? (
-                    <div className="post-message" style={{ marginLeft: `${this.props.count > 1 ? (this.props.count - 1) * 65 : 0}px`, width: `calc(100% - ${this.props.count > 1 ? (this.props.count - 1) * 65 : 0}px)` }}>
+                    <div className="post-message" style={{ marginLeft: `${this.props.count > 1 ? (this.props.count - 1) * 30 : 0}px`, width: `calc(100% - ${this.props.count > 1 ? (this.props.count - 1) * 30 : 0}px)` }}>
                         <textarea ref={this.textInput} className="post-input" type="text" id="message" onChange={this.handleChange} placeholder={this.props.placeHolder} value={this.state.message} />
                         <div className="post-menu-contain">
                             <div className="post-menu-post" onClick={this.handleSubmit}>
@@ -125,7 +123,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createComment: (comment, id, parent) => dispatch(createComment(comment, id, parent))
+        createComment: (comment, id, parent, reply) => dispatch(createComment(comment, id, parent))
     };
 };
 

@@ -4,15 +4,33 @@ import { createComment, fetchComments, userVote } from "../../redux/actions/comm
 import "./comments.scss";
 import Comment from "../comment";
 const shortid = require("shortid");
+const arrayToTree = require("array-to-tree");
 
 class commentsContainer extends Component {
+    componentDidMount() {
+        this.props.fetchComments(this.props.videoID);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.videoID !== prevProps.videoID) {
+            this.onRouteChanged();
+        }
+    }
+    onRouteChanged = () => {
+        this.props.fetchComments(this.props.videoID);
+    };
+
     getComments = () => {
         if (this.props.comments[this.props.videoID] === undefined) {
-            this.props.fetchComments(this.props.videoID);
-            return <div>Loading...</div>;
+            return <div>Error Loading, try again.</div>;
         } else {
             if (this.props.comments[this.props.videoID].length === 0) return <div style={{ color: "white", textAlign: "left", opacity: "0.6" }}>Be the first to comment!</div>;
-            return this.props.comments[this.props.videoID].map((comment, index) => <Comment videoID={this.props.videoID} {...comment} index={index} key={shortid.generate()} />);
+
+            let tree = arrayToTree(this.props.comments[this.props.videoID], {
+                parentProperty: "parent",
+                customID: "messageID"
+            });
+            return tree.map((comment, index) => <Comment videoID={this.props.videoID} {...comment} index={index} key={shortid.generate()} />);
         }
     };
 

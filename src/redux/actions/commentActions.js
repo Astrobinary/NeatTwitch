@@ -1,7 +1,7 @@
 const shortid = require("shortid");
 const arrayToTree = require("array-to-tree");
 
-export const createComment = (message, videoID, parent) => {
+export const createComment = (message, videoID, parent, reply) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         const firebase = getFirebase().auth();
@@ -25,30 +25,44 @@ export const createComment = (message, videoID, parent) => {
 
         let payload = {
             post,
-            videoID
+            videoID,
+            reply
         };
 
         firestore
             .collection("videos")
             .doc(videoID)
-            .set({ videoID, comments: {} })
+            .collection("comments")
+            .doc(randomId)
+            .set({ ...post })
             .then(() => {
-                firestore
-                    .collection("videos")
-                    .doc(videoID)
-                    .collection("comments")
-                    .doc(randomId)
-                    .set({ ...post })
-                    .then(() => {
-                        dispatch({ type: "CREATE_COMMENT_SUCCESS", payload });
-                    })
-                    .catch(err => {
-                        dispatch({ type: "CREATE_COMMENT_FAILED", err });
-                    });
+                dispatch({ type: "CREATE_COMMENT_SUCCESS", payload });
             })
             .catch(err => {
                 dispatch({ type: "CREATE_COMMENT_FAILED", err });
             });
+
+        // firestore
+        //     .collection("videos")
+        //     .doc(videoID)
+        //     .set({ videoID, comments: {} })
+        //     .then(() => {
+        //         firestore
+        //             .collection("videos")
+        //             .doc(videoID)
+        //             .collection("comments")
+        //             .doc(randomId)
+        //             .set({ ...post })
+        //             .then(() => {
+        //                 dispatch({ type: "CREATE_COMMENT_SUCCESS", payload });
+        //             })
+        //             .catch(err => {
+        //                 dispatch({ type: "CREATE_COMMENT_FAILED", err });
+        //             });
+        //     })
+        //     .catch(err => {
+        //         dispatch({ type: "CREATE_COMMENT_FAILED", err });
+        //     });
     };
 };
 
@@ -60,6 +74,7 @@ export const fetchComments = id => {
             .collection(`videos/${id}/comments`)
             .orderBy("points", "desc")
             .orderBy("timestamp", "desc");
+
         docRef
             .get()
             .then(doc => {
@@ -69,10 +84,8 @@ export const fetchComments = id => {
                 doc.forEach(snap => {
                     if (snap.exists) temp.push(snap.data());
                 });
-                comments[id] = arrayToTree(temp, {
-                    parentProperty: "parent",
-                    customID: "messageID"
-                });
+
+                comments[id] = temp;
 
                 dispatch({
                     type: "GET_COMMENT_SUCCESS",
@@ -87,7 +100,7 @@ export const fetchComments = id => {
     };
 };
 
-export const userVote = (messageId, videoID, index, direction, voter) => {
+export const userVote = (messageID, videoID, index, direction, voter) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         let newPoints;
@@ -96,7 +109,7 @@ export const userVote = (messageId, videoID, index, direction, voter) => {
             .collection("videos")
             .doc(videoID)
             .collection("comments")
-            .doc(messageId);
+            .doc(messageID);
 
         return firestore
             .runTransaction(transaction => {
@@ -116,9 +129,8 @@ export const userVote = (messageId, videoID, index, direction, voter) => {
             })
             .then(() => {
                 const payload = {
-                    messageId,
+                    messageID,
                     videoID,
-                    index,
                     newPoints,
                     voter
                 };

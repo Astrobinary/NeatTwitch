@@ -7,6 +7,9 @@ import Video from "../video";
 
 import Loading from "../loading";
 
+import PostComment from "../postComment";
+import CommentsContainer from "../commentsContainer";
+
 import "./singlePlayer.scss";
 
 class singlePlayer extends Component {
@@ -26,6 +29,11 @@ class singlePlayer extends Component {
         return (
             <div>
                 <section className="single-videoplayer">{this.props.loading ? <Loading /> : video}</section>
+                <section className="playlist-comments">
+                    <PostComment videoID={this.props.match.params.videoID} placeHolder={"any thoughts?"} />
+                    <div className="comment-jump">user comments</div>
+                    <CommentsContainer videoID={this.props.match.params.videoID} />
+                </section>
             </div>
         );
     }

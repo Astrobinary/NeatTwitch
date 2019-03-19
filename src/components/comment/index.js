@@ -16,23 +16,23 @@ const ReactMarkdown = require("react-markdown");
 class Comment extends Component {
     constructor(props) {
         super(props);
-        this.state = { showReply: false, count: 1 };
+        this.state = { showReply: false, count: 1, canVote: true };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         if (this.props.count) {
             this.setState({ count: this.props.count + this.state.count });
         }
     }
 
     userVote = (messageID, videoID, index, direction, voter, voted) => {
-        console.log(messageID);
-
         if (this.hasVoted(voted, voter)) return;
         this.props.userVote(messageID, videoID, index, direction, voter);
     };
 
     hasVoted = (voted, voter) => {
+        if (voted === undefined) return false;
+
         return voted.includes(voter);
     };
 
@@ -41,10 +41,9 @@ class Comment extends Component {
     };
 
     render() {
-        console.log(this.state.count);
         return (
             <div key={uuid.v4()}>
-                <div className="comment-user" style={{ marginLeft: `${this.state.count > 1 ? (this.state.count - 1) * 65 : 0}px`, width: `calc(100% - ${this.state.count > 1 ? (this.state.count - 1) * 65 : 0}px)` }}>
+                <div className="comment-user" style={{ marginLeft: `${this.state.count > 1 ? (this.state.count - 1) * 30 : 0}px`, width: `calc(100% - ${this.state.count > 1 ? (this.state.count - 1) * 30 : 0}px)` }}>
                     <div className="comment-vote">
                         <div className="comment-up" onClick={() => this.userVote(this.props.messageID, this.props.videoID, this.props.index, "up", this.props.auth.uid, this.props.voted)}>
                             {this.hasVoted(this.props.voted, this.props.auth.uid) ? <img src={up} alt="upvote" style={{ cursor: "not-allowed" }} /> : <img src={up} alt="upvote" />}
@@ -64,18 +63,20 @@ class Comment extends Component {
                         <ReactMarkdown className="comment-output" source={this.props.message} disallowedTypes={["link", "heading", "thematicBreak", "linkReference", "table", "paragraph"]} unwrapDisallowed />
                         <div className="btn-contain com">
                             <div className="btn-by">{moment(this.props.timestamp).fromNow()}</div>
-                            <div className="btn-post" id="submit" onClick={this.handleSubmit}>
-                                <div className="btn-icon">
-                                    <img src={replyIcon} alt="reply" />
+                            {this.state.showReply ? null : (
+                                <div className="btn-post" onClick={this.toggleReply}>
+                                    <div className="btn-icon">
+                                        <img src={replyIcon} alt="reply" />
+                                    </div>
+                                    <div>reply</div>
                                 </div>
-                                <div onClick={this.toggleReply}>reply</div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
-                {this.state.showReply ? <PostComment {...this.props} placeHolder={`replying to ${this.props.author}...`} parent={this.props.messageID} count={this.state.count} /> : null}
-                {this.props.children && this.props.children.map((item, index) => <Comment key={index} {...item} count={this.state.count} auth={this.props.auth} userVote={this.props.userVote} />)}
+                {this.state.showReply ? <PostComment {...this.props} placeHolder={`replying to ${this.props.author}...`} parent={this.props.messageID} count={this.state.count} reply={true} /> : null}
+                {this.props.children && this.props.children.map((item, index) => <Comment key={uuid.v4()} {...item} count={this.state.count} auth={this.props.auth} userVote={this.userVote} />)}
             </div>
         );
     }

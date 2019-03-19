@@ -6,10 +6,10 @@ const initialState = { loading: false, error: null };
 const commentsReducer = (state = initialState, action) => {
     switch (action.type) {
         case "CREATE_COMMENT_SUCCESS":
-            console.log(action.payload);
             return update(state, {
                 [action.payload.videoID]: { $unshift: [action.payload.post] }
             });
+
         case "CREATE_COMMENT_FAILED":
             console.log(action);
             return state;
@@ -22,12 +22,6 @@ const commentsReducer = (state = initialState, action) => {
         case "GET_COMMENT_SUCCESS":
             let state2;
             let obj = action.comments;
-            console.log(
-                arrayToTree(action.comments[action.videoID], {
-                    parentProperty: "parent",
-                    customID: "messageID"
-                })
-            );
 
             if (state[action.videoID] === undefined) {
                 state2 = update(state[action.videoID], { $set: action.comments });
@@ -49,26 +43,18 @@ const commentsReducer = (state = initialState, action) => {
             };
 
         case "VOTE_SUCCESS":
-            const index = state[action.payload.videoID][action.payload.index];
-            // const newPoints = update(index, {
-            //     points: { $set: action.payload.newPoints }
-            // });
+            let index;
+            let temp = state[action.payload.videoID];
 
-            console.log(action.payload.voter);
-            console.log(state[action.payload.videoID][action.payload.index]);
-
-            // const newVoter = update(index, {
-            //     voted: { $push: action.payload.voter }
-            // });
-
-            // console.log(action.payload.voter);
+            temp.forEach((element, ind) => {
+                if (element.messageID === action.payload.messageID) {
+                    index = ind;
+                }
+            });
 
             return update(state, {
                 [action.payload.videoID]: {
-                    [action.payload.index]: {
-                        voted: { $push: [action.payload.voter] },
-                        points: { $set: action.payload.newPoints }
-                    }
+                    [index]: { voted: { $push: [action.payload.voter] }, points: { $set: action.payload.newPoints } }
                 }
             });
 

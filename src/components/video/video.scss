@@ -25,7 +25,7 @@ iframe {
     font-size: 20px;
     padding-top: 10px;
     padding-left: 10px;
-    width: 65%;
+    width: 77%;
 }
 
 .player-title {
@@ -36,7 +36,7 @@ iframe {
     padding-top: 5px;
     display: inline-block;
     vertical-align: top;
-    width: 88%;
+    width: 87%;
 }
 .player-title-text {
     text-overflow: ellipsis;
@@ -73,6 +73,7 @@ iframe {
 .player-logo > img {
     width: 50px;
     height: 50px;
+    border-radius: 3px;
 }
 
 .player-info-right {
@@ -81,6 +82,7 @@ iframe {
     padding-top: 15px;
     font-weight: bold;
     padding-right: 10px;
+    width: 170px;
 }
 
 .player-icons {
@@ -92,6 +94,28 @@ iframe {
         &:hover {
             opacity: 1;
             cursor: pointer;
+        }
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .player-title {
+        font-size: 12px;
+        width: 87%;
+    }
+    .player-name {
+        font-size: 10px;
+    }
+    .player-logo {
+        img {
+            width: 35px;
+            height: 35px;
+        }
+    }
+
+    .player-icons {
+        img {
+            width: 15px;
         }
     }
 }

@@ -30,7 +30,6 @@ class Feed extends Component {
     }
 
     componentWillMount() {
-        console.log(this.props.clips[this.state.currentFeedSelection]);
         if (this.props.clips[this.state.currentFeedSelection] === undefined) this.props.fetchFeedVideos(this.state.currentFeedSelection);
     }
 

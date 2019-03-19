@@ -6,7 +6,8 @@ import { uid } from "react-uid";
 
 import Backto from "../backto";
 import Video from "../video";
-// import Comments from "../comments";
+import PostComment from "../postComment";
+import CommentsContainer from "../commentsContainer";
 
 import loadPreview from "../../images/previewNot.png";
 import missing from "../../images/missing_big.png";
@@ -72,7 +73,6 @@ class playlistPlayer extends Component {
                                 <div className="player-next-icon">
                                     <img src={nextIcon} alt="next" />
                                 </div>
-                                {/* <img src={this.state.next.thumbnails.medium} alt="next" onClick={() => this.updateVideos(true)} /> */}
                                 <Img alt="next" src={[this.state.next.thumbnails.medium, missing]} loader={<img alt="loading" src={loadPreview} />} onClick={() => this.updateVideos(true)} />
 
                                 <div className="player-next-title">{this.state.next.title}</div>
@@ -81,7 +81,11 @@ class playlistPlayer extends Component {
                     </div>
                 </section>
 
-                {/* <Comments /> */}
+                <section className="playlist-comments">
+                    <PostComment videoID={this.props.match.params.videoID} placeHolder={"any thoughts?"} />
+                    <div className="comment-jump">user comments</div>
+                    <CommentsContainer videoID={this.props.match.params.videoID} />
+                </section>
             </div>
         );
     }

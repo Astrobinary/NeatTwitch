@@ -71,15 +71,19 @@ class video extends Component {
                     <div className="player-info-right">
                         <div className="player-icons">
                             <img src={likeIcon} alt="like icon" title="like" />
+                            {/* <div className="like-icon">like</div> */}
+
                             <img src={shareIcon} alt="share icon" title="share" />
+                            {/* <div className="share-icon">share</div> */}
                             {this.props.videoInfo.vod ? (
                                 <a href={this.props.videoInfo.vod.url} target="_blank" rel="noopener noreferrer">
                                     <img src={vodIcon} alt="vod icon" title="vod" />
+                                    {/* <div className="vod-icon">vod</div> */}
                                 </a>
                             ) : null}
-
                             <a href={this.getMp4()} download target="_blank" rel="noopener noreferrer">
                                 <img src={downloadIcon} alt="download icon" title="download" />
+                                {/* <div className="download-icon">get</div> */}
                             </a>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { FETCH_FEED_REQUEST, FETCH_FEED_SUCCESS, FETCH_FEED_FAILURE, FETCH_SINGLE_REQUEST, FETCH_SINGLE_SUCCESS, FETCH_SINGLE_FAILURE } from "../actions/videoActions";
+import { FETCH_FEED_REQUEST, FETCH_FEED_SUCCESS, FETCH_FEED_FAILURE, FETCH_SINGLE_REQUEST, FETCH_SINGLE_SUCCESS, FETCH_SINGLE_FAILURE, FETCH_FEED_MORE_REQUEST, FETCH_FEED_MORE_SUCCESS, FETCH_FEED_MORE_FAILURE } from "../actions/feedActions";
 
 const initialState = {
     loading: false,
@@ -16,22 +16,32 @@ const feedsReducer = (state = initialState, action) => {
                 error: null
             };
         case FETCH_FEED_SUCCESS:
-            let prevState;
-            let obj = action.payload;
+            let newState = update(state[action.time], { $set: action.payload });
 
-            if (state[action.time] === undefined) {
-                prevState = update(state[action.time], { $set: action.payload });
-            } else {
-                prevState = update(state[action.time], { $merge: action.payload[action.user] });
-                obj[action.time] = prevState;
-            }
-
+            return {
+                ...newState,
+                loading: false
+            };
+        case FETCH_FEED_FAILURE:
             return {
                 ...state,
                 loading: false,
-                ...obj
+                error: action.payload
             };
-        case FETCH_FEED_FAILURE:
+
+        case FETCH_FEED_MORE_REQUEST:
+            return {
+                ...state,
+                error: null
+            };
+        case FETCH_FEED_MORE_SUCCESS:
+            let clips = update(state, { [action.time]: { $push: action.clips }, cursor: { $set: action.cursor } });
+
+            return {
+                ...clips,
+                loading: false
+            };
+        case FETCH_FEED_MORE_FAILURE:
             return {
                 ...state,
                 loading: false,

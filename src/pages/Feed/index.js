@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { uid } from "react-uid";
-import { fetchFeedVideos } from "../../redux/actions/videoActions";
+import { fetchFeedVideos, fetchMoreFeedVideos } from "../../redux/actions/feedActions";
 import SimpleStorage from "react-simple-storage";
-
+import Waypoint from "react-waypoint";
 import Loading from "../../components/loading";
 
 import PreviewItem from "../../components/previewItem";
@@ -48,14 +48,16 @@ class Feed extends Component {
     };
 
     getClips = limit => {
-        const original = this.props.clips[this.state.currentFeedSelection];
-        let clip = original.filter((i, index) => index < limit);
+        const clip = this.props.clips[this.state.currentFeedSelection];
 
         return clip.map((x, index, arr) => (
             <Link onDragStart={this.handleOnDragStart} key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
                 <PreviewItem video={x} />
             </Link>
         ));
+    };
+    getMoreVideos = () => {
+        if (this.props.cursor) this.props.fetchMoreFeedVideos(this.state.currentFeedSelection, this.props.cursor);
     };
 
     render() {
@@ -90,7 +92,10 @@ class Feed extends Component {
                     ) : null}
                 </div>
 
-                <section className="clips-container-feed">{this.props.loading ? loadGif : clips}</section>
+                <section className="clips-container-feed">
+                    {this.props.loading ? loadGif : clips}
+                    <Waypoint topOffset={"174px"} onEnter={this.getMoreVideos} />
+                </section>
             </section>
         );
     }
@@ -100,13 +105,15 @@ const mapStateToProps = (state, ownProps) => {
     return {
         clips: state.feedsReducer,
         loading: state.feedsReducer.loading,
+        cursor: state.feedsReducer.cursor,
         error: state.feedsReducer.error
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchFeedVideos: time => dispatch(fetchFeedVideos(time))
+        fetchFeedVideos: time => dispatch(fetchFeedVideos(time)),
+        fetchMoreFeedVideos: (time, cursor) => dispatch(fetchMoreFeedVideos(time, cursor))
     };
 };
 

@@ -33,8 +33,12 @@ class PostComment extends Component {
     }
 
     onRouteChanged = () => {
-        this.textInput.current.disabled = false;
-        this.textInput.current.style.opacity = "0.8";
+
+        if(this.text){
+            this.textInput.current.disabled = false;
+            this.textInput.current.style.opacity = "0.8";
+        }
+       
         this.setState({ message: "", canPost: true, postText: "post" });
     };
     handleChange = e => {

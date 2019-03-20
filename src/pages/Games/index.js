@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchGames, fetchMoreGames } from "../../redux/actions/videoActions";
+import { fetchGames, fetchMoreGames } from "../../redux/actions/gameActions";
 import Waypoint from "react-waypoint";
 import LazyLoad from "react-lazyload";
 import { uid } from "react-uid";
@@ -34,8 +34,6 @@ class Games extends Component {
 
     componentDidMount() {
         if (this.props.gameList.length === 0) this.props.fetch(this.state.offset);
-
-        window.scrollTo(0, 0);
     }
 
     getMoreGames = () => {

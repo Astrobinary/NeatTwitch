@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 
-import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE } from "../actions/videoActions";
+import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE, FETCH_MORE_STREAMER_VIDEOS_REQUEST, FETCH_MORE_STREAMER_VIDEOS_SUCCESS, FETCH_MORE_STREAMER_VIDEOS_FAILURE } from "../actions/streamerActions";
 
 const initialState = {
     _twitch: [],
@@ -75,6 +75,25 @@ const streamersReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: action.error
+            };
+
+        case FETCH_MORE_STREAMER_VIDEOS_REQUEST:
+            return {
+                ...state,
+                error: null
+            };
+        case FETCH_MORE_STREAMER_VIDEOS_SUCCESS:
+            let clips = update(state, { [action.streamer]: { [action.time]: { $push: action.clips }, cursor: { $set: action.cursor } } });
+
+            return {
+                ...clips,
+                loading: false
+            };
+        case FETCH_MORE_STREAMER_VIDEOS_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
             };
 
         default:

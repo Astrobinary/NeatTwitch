@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchStreamers, fetchMoreStreamers } from "../../redux/actions/videoActions";
+import { fetchStreamers, fetchMoreStreamers } from "../../redux/actions/streamerActions";
 import { Link } from "react-router-dom";
 import { uid } from "react-uid";
 import "./streamers.scss";
 import Img from "react-image";
-
+import Waypoint from "react-waypoint";
 import Loading from "../../components/loading";
 
 import optionIcon from "../../images/sort.svg";
@@ -18,7 +18,8 @@ class Streamers extends Component {
         this.state = {
             showMenu: false,
             menuItems: ["youtube", "followed"],
-            currntMenu: "twitch"
+            currntMenu: "twitch",
+            offset: 0
         };
     }
 
@@ -35,6 +36,11 @@ class Streamers extends Component {
         temp.push(this.state.currntMenu);
 
         this.setState({ currntMenu: newItem, menuItems: temp, showMenu: !this.state.showMenu });
+    };
+
+    getMoreStreamers = () => {
+        this.props.fetchAgain(this.state.offset + 102);
+        this.setState({ offset: this.state.offset + 102 });
     };
 
     render() {
@@ -70,7 +76,10 @@ class Streamers extends Component {
                     <span>STREAMERS</span>
                 </div>
 
-                <section className="streamer-container">{this.props.loading ? loadGif : streamerItems}</section>
+                <section className="streamer-container">
+                    {this.props.loading ? loadGif : streamerItems}
+                    <Waypoint topOffset={"430px"} onEnter={this.getMoreStreamers} />
+                </section>
             </section>
         );
     }

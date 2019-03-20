@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchStreamVideos, fetchGameVideos } from "../../redux/actions/videoActions";
+import { fetchStreamVideos, fetchMoreStreamerVideos } from "../../redux/actions/streamerActions";
+import { fetchGameVideos, fetchMoreGameVideos } from "../../redux/actions/gameActions";
 
 import { uid } from "react-uid";
 import SimpleStorage from "react-simple-storage";
-
+import Waypoint from "react-waypoint";
 import Info from "../clipsInfo";
 import PreviewItem from "../previewItem";
 
@@ -77,6 +78,10 @@ class previewContainer extends Component {
             </Link>
         ));
     };
+    getMoreVideos = () => {
+        if (this.props.match.params.gameID) if (this.props.videos.cursor) this.props.fetchMoreGameVideos(this.props.match.params.gameID, this.state.currentClipSelection, this.props.videos.cursor);
+        if (this.props.match.params.streamerID) if (this.props.videos.cursor) this.props.fetchMoreStreamerVideos(this.props.match.params.streamerID, this.state.currentClipSelection, this.props.videos.cursor);
+    };
 
     render() {
         const loadGif = <Loading />;
@@ -119,7 +124,13 @@ class previewContainer extends Component {
                         ) : null}
                     </div>
                 </div>
-                {this.props.loading ? loadGif : <section className="clips-container">{clips}</section>}
+                {this.props.loading ? (
+                    loadGif
+                ) : (
+                    <section className="clips-container">
+                        {clips} <Waypoint topOffset={"430px"} onEnter={this.getMoreVideos} />
+                    </section>
+                )}
             </section>
         );
     }
@@ -131,6 +142,8 @@ const mapStateToProps = (state, ownProps) => {
     if (ownProps.match.params.streamerID) reducer = "streamersReducer";
     if (ownProps.match.params.gameID) reducer = "gamesReducer";
 
+    console.log(state[reducer][ownProps.match.params[key]]);
+
     return {
         videos: state[reducer][ownProps.match.params[key]],
         loading: state[reducer].loading,
@@ -141,7 +154,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchStreamVideos: (id, time) => dispatch(fetchStreamVideos(id, time)),
-        fetchGameVideos: (id, time) => dispatch(fetchGameVideos(id, time))
+        fetchGameVideos: (id, time) => dispatch(fetchGameVideos(id, time)),
+        fetchMoreGameVideos: (id, time, cursor) => dispatch(fetchMoreGameVideos(id, time, cursor)),
+        fetchMoreStreamerVideos: (id, time, cursor) => dispatch(fetchMoreStreamerVideos(id, time, cursor))
     };
 };
 

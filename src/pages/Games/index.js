@@ -25,9 +25,15 @@ class Games extends Component {
             current = JSON.parse(localStorage.getItem("_currentGameSort"));
         }
 
+        let items = ["all", "followed"];
+        items = items.filter(item => {
+            return item !== current;
+        });
+
         this.state = {
             showMenu: false,
             currentGameSort: current,
+            gameItems: items,
             offset: 0
         };
     }
@@ -47,9 +53,27 @@ class Games extends Component {
     };
 
     updateMenu = time => {
-        this.setState({ showMenu: false, currentGameSort: time });
+        let normalize = ["all", "followed"];
+
+        let items = normalize.filter(item => {
+            return item !== time;
+        });
+
+        this.setState({ showMenu: false, currentGameSort: time, gameItems: items });
+
+        // if (this.props.clips[time] === undefined) {
+        //     this.props.fetchFeedVideos(time);
+        // }
 
         console.log(`Game sort changed: ${time}`);
+    };
+
+    renderMenu = () => {
+        return this.state.gameItems.map((sort, index) => (
+            <div key={uid(index)} onClick={() => this.updateMenu(sort)}>
+                {sort}
+            </div>
+        ));
     };
 
     render() {
@@ -67,21 +91,18 @@ class Games extends Component {
             </div>
         );
 
+        const menu = this.renderMenu();
+
         return (
             <section className="Games">
-                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "offset"]} />
+                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "offset", "gameItems"]} />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
                     <span>SORT TOP GAMES BY</span>
                     <span className="sort-choice" onClick={this.toggleMenu}>
                         {this.state.currentGameSort}
                     </span>
-                    {this.state.showMenu ? (
-                        <div className="sort-menu">
-                            <div onClick={() => this.updateMenu("followed")}>Followed</div>
-                            <div onClick={() => this.updateMenu("all")}>All</div>
-                        </div>
-                    ) : null}
+                    {this.state.showMenu ? <div className="sort-menu">{menu}</div> : null}
                 </div>
 
                 <section className="games-container">

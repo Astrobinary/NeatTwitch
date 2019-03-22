@@ -23,13 +23,23 @@ class Feed extends Component {
             currentFeed = JSON.parse(localStorage.getItem("_currentFeedSelection"));
         }
 
+        let items = ["day", "week", "month", "all"];
+
+        if (items.length === 4) {
+            items = items.filter(item => {
+                return item !== currentFeed;
+            });
+        }
+
         this.state = {
             showMenu: false,
-            currentFeedSelection: currentFeed
+            currentFeedSelection: currentFeed,
+            feedItems: items
         };
     }
 
     componentWillMount() {
+        console.log();
         if (this.props.clips[this.state.currentFeedSelection] === undefined) this.props.fetchFeedVideos(this.state.currentFeedSelection);
     }
 
@@ -40,14 +50,20 @@ class Feed extends Component {
     handleOnDragStart = e => e.preventDefault();
 
     updateMenu = time => {
-        this.setState({ showMenu: false, currentFeedSelection: time });
+        let normalize = ["day", "week", "month", "all"];
+
+        let items = normalize.filter(item => {
+            return item !== time;
+        });
+
+        this.setState({ showMenu: false, currentFeedSelection: time, feedItems: items });
 
         if (this.props.clips[time] === undefined) {
             this.props.fetchFeedVideos(time);
         }
     };
 
-    getClips = limit => {
+    getClips = () => {
         const clip = this.props.clips[this.state.currentFeedSelection];
 
         return clip.map((x, index, arr) => (
@@ -58,6 +74,14 @@ class Feed extends Component {
     };
     getMoreVideos = () => {
         if (this.props.cursor) this.props.fetchMoreFeedVideos(this.state.currentFeedSelection, this.props.cursor);
+    };
+
+    renderMenu = () => {
+        return this.state.feedItems.map((sort, index) => (
+            <div key={uid(index)} onClick={() => this.updateMenu(sort)}>
+                {sort}
+            </div>
+        ));
     };
 
     render() {
@@ -73,23 +97,18 @@ class Feed extends Component {
             clips = <div>No clips found this {this.state.currentFeedSelection}</div>;
         }
 
+        const menu = this.renderMenu();
+
         return (
             <section>
-                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "responsive"]} />
+                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "responsive", "allSort", "feedItems", "menuComp"]} />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
                     <span>SORT TOP CLIPS BY</span>
                     <span className="sort-choice" onClick={this.toggleMenu}>
                         {this.state.currentFeedSelection}
                     </span>
-                    {this.state.showMenu ? (
-                        <div className="sort-menu">
-                            <div onClick={() => this.updateMenu("day")}>Day</div>
-                            <div onClick={() => this.updateMenu("week")}>Week</div>
-                            <div onClick={() => this.updateMenu("month")}>Month</div>
-                            <div onClick={() => this.updateMenu("all")}>All</div>
-                        </div>
-                    ) : null}
+                    {this.state.showMenu ? <div className="sort-menu">{menu}</div> : null}
                 </div>
 
                 <section className="clips-container-feed">

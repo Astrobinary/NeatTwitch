@@ -157,3 +157,38 @@ export function fetchMoreStreamerVideos(streamer, time, cursor) {
             });
     };
 }
+
+export const FETCH_FOLLOWED_STREAMERS_REQUEST = "FETCH_FOLLOWED_STREAMERS_REQUEST";
+export const FETCH_FOLLOWED_STREAMERS_SUCCESS = "FETCH_FOLLOWED_STREAMERS_SUCCESS";
+export const FETCH_FOLLOWED_STREAMERS_FAILURE = "FETCH_FOLLOWED_STREAMERS_FAILURE";
+
+export const fetchFollwedStreamersBegin = () => ({
+    type: FETCH_FOLLOWED_STREAMERS_REQUEST
+});
+
+export const fetchFollwedStreamersSucess = (streamers, sort) => ({
+    type: FETCH_FOLLOWED_STREAMERS_SUCCESS,
+    payload: streamers,
+    sort
+});
+
+export const fetchFollwedStreamersFailure = (error, userObj) => ({
+    type: FETCH_FOLLOWED_STREAMERS_FAILURE,
+    payload: error,
+    user: userObj
+});
+
+export function fetchFollowedStreamers(id, type) {
+    return dispatch => {
+        dispatch(fetchFollwedStreamersBegin());
+        return axios
+            .get(`${api}/users/${id}/follows/channels?sortby=last_broadcast&limit=100`, options)
+            .then(res => {
+                dispatch(fetchFollwedStreamersSucess(res.data.follows, type));
+                return res.data.top;
+            })
+            .catch(error => {
+                dispatch(fetchFollwedStreamersFailure(error.response));
+            });
+    };
+}

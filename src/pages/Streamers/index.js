@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchStreamers, fetchMoreStreamers } from "../../redux/actions/streamerActions";
+import { fetchStreamers, fetchMoreStreamers, fetchFollowedStreamers } from "../../redux/actions/streamerActions";
 import { Link } from "react-router-dom";
+import SimpleStorage from "react-simple-storage";
 import { uid } from "react-uid";
 import "./streamers.scss";
 import Img from "react-image";
@@ -15,27 +16,47 @@ class Streamers extends Component {
     constructor(props) {
         super(props);
 
+        let current = JSON.parse(localStorage.getItem("_currentStreamerSelection"));
+        if (current === undefined || current === null) {
+            current = "twitch";
+        } else {
+            current = JSON.parse(localStorage.getItem("_currentStreamerSelection"));
+        }
+
+        let items = ["twitch", "followed"];
+
+        items = items.filter(item => {
+            return item !== current;
+        });
+
         this.state = {
             showMenu: false,
-            menuItems: ["youtube", "followed"],
-            currntMenu: "twitch",
+            currentStreamerSelection: current,
+            streamersSort: items,
             offset: 0
         };
     }
 
     componentDidMount() {
-        if (this.props.twitch.length === 0) this.props.fetch();
+        if (this.state.currentStreamerSelection === "followed" && this.props.auth.isEmpty) this.setState({ currentStreamerSelection: "twitch", showMenu: false });
+        if (this.props.reducer.twitch === undefined) this.props.fetch();
+        if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7), "followed");
     }
 
     toggleMenu = () => {
         this.setState({ showMenu: !this.state.showMenu });
     };
 
-    updateMenu = newItem => {
-        let temp = this.state.menuItems.filter(i => i !== newItem);
-        temp.push(this.state.currntMenu);
+    updateMenu = time => {
+        if (time === "followed") if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7), "followed");
 
-        this.setState({ currntMenu: newItem, menuItems: temp, showMenu: !this.state.showMenu });
+        let normalize = ["twitch", "followed"];
+
+        let items = normalize.filter(item => {
+            return item !== time;
+        });
+
+        this.setState({ currentStreamerSelection: time, streamersSort: items, showMenu: !this.state.showMenu });
     };
 
     getMoreStreamers = () => {
@@ -43,13 +64,33 @@ class Streamers extends Component {
         this.setState({ offset: this.state.offset + 102 });
     };
 
-    render() {
-        const streamerItems = this.props.twitch.map(x => (
+    renderStreamers = () => {
+        if (this.props.reducer[this.state.currentStreamerSelection].length < 1) {
+            return <div>No streamers found...</div>;
+        }
+
+        return this.props.reducer[this.state.currentStreamerSelection].map(x => (
             <Link className="streamer-item" key={uid(x)} to={`${this.props.match.url}/${x.channel.name}`}>
                 <Img alt={x.channel.name} src={[x.channel.logo.replace("300x300", "150x150"), missingPreview]} loader={<img alt="missing" src={missingPreview} />} />
                 <div className="streamer-name">{x.channel.name}</div>
             </Link>
         ));
+    };
+
+    renderMenu = () => {
+        return this.state.streamersSort.map((sort, index) => (
+            <div key={uid(index)} onClick={() => this.updateMenu(sort)}>
+                {sort}
+            </div>
+        ));
+    };
+
+    render() {
+        let streamers;
+
+        if (this.props.reducer[this.state.currentStreamerSelection] !== undefined) {
+            streamers = this.renderStreamers();
+        }
 
         const loadGif = (
             <div className="streamer-loader">
@@ -57,27 +98,23 @@ class Streamers extends Component {
             </div>
         );
 
+        const menu = this.renderMenu();
+
         return (
             <section className="Streamers">
+                <SimpleStorage parent={this} blacklist={["showMenu", "offset", "streamersSort"]} />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
                     <span>SORT BY</span>
                     <span className="sort-choice" onClick={this.toggleMenu}>
-                        {this.state.currntMenu}
+                        {this.state.currentStreamerSelection}
                     </span>
-                    {this.state.showMenu ? (
-                        <div className="sort-menu">
-                            <div onClick={() => this.updateMenu("followed")}>Followed</div>
-                            <div onClick={() => this.updateMenu("youtube")}>YouTube</div>
-                            <div onClick={() => this.updateMenu("twitch")}>Twitch</div>
-                            <div onClick={() => this.updateMenu("all")}>All</div>
-                        </div>
-                    ) : null}
+                    {this.state.showMenu ? <div className="sort-menu">{menu}</div> : null}
                     <span>STREAMERS</span>
                 </div>
 
                 <section className="streamer-container">
-                    {this.props.loading ? loadGif : streamerItems}
+                    {this.props.loading ? loadGif : streamers}
                     <Waypoint topOffset={"430px"} onEnter={this.getMoreStreamers} />
                 </section>
             </section>
@@ -87,17 +124,20 @@ class Streamers extends Component {
 
 const mapStateToProps = state => {
     return {
-        twitch: state.streamersReducer._twitch,
+        reducer: state.streamersReducer,
+        twitch: state.streamersReducer.twitch,
         loading: state.streamersReducer.loading,
         error: state.streamersReducer.error,
-        offset: state.streamersReducer.offset
+        offset: state.streamersReducer.offset,
+        auth: state.firebaseReducer.auth
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         fetch: () => dispatch(fetchStreamers()),
-        fetchAgain: offset => dispatch(fetchMoreStreamers(offset))
+        fetchAgain: offset => dispatch(fetchMoreStreamers(offset)),
+        fetchFollowedStreamers: (id, sort) => dispatch(fetchFollowedStreamers(id, sort))
     };
 };
 

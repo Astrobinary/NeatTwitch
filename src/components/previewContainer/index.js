@@ -32,16 +32,26 @@ class previewContainer extends Component {
         let backURL = split.splice(1, split.length - 2);
         backURL = backURL.join("/");
 
+        let items = ["day", "week", "month", "all"];
+
+        if (items.length === 4) {
+            items = items.filter(item => {
+                return item !== current;
+            });
+        }
+
         this.state = {
             showMenu: false,
             currentClipSelection: current,
+            clipSort: items,
             back,
             backURL,
-            name
+            name,
+            mod: 0
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.props.match.params.streamerID) {
             if (this.props.videos === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, this.state.currentClipSelection);
         }
@@ -56,7 +66,11 @@ class previewContainer extends Component {
     };
 
     updateMenu = time => {
-        this.setState({ showMenu: false, currentClipSelection: time });
+        let normalize = ["day", "week", "month", "all"];
+
+        let items = normalize.filter(item => {
+            return item !== time;
+        });
 
         if (this.props.match.params.streamerID) {
             if (this.props.videos[time] === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, time);
@@ -65,11 +79,14 @@ class previewContainer extends Component {
         if (this.props.match.params.gameID) {
             if (this.props.videos[time] === undefined) this.props.fetchGameVideos(this.props.match.params.gameID, time, "game");
         }
+        this.setState({ showMenu: false, currentClipSelection: time, clipSort: items });
     };
 
     getClips = () => {
         if (this.props.videos[this.state.currentClipSelection].length < 1) {
             return <div>No clips found...</div>;
+        } else {
+            if (this.state.mod === 0) this.setState({ mod: this.props.videos[this.state.currentClipSelection].length % 6 });
         }
 
         return this.props.videos[this.state.currentClipSelection].map((x, index, arr) => (
@@ -81,6 +98,24 @@ class previewContainer extends Component {
     getMoreVideos = () => {
         if (this.props.match.params.gameID) if (this.props.videos.cursor) this.props.fetchMoreGameVideos(this.props.match.params.gameID, this.state.currentClipSelection, this.props.videos.cursor);
         if (this.props.match.params.streamerID) if (this.props.videos.cursor) this.props.fetchMoreStreamerVideos(this.props.match.params.streamerID, this.state.currentClipSelection, this.props.videos.cursor);
+    };
+
+    renderExtra = () => {
+        let elements = [];
+
+        for (let index = 0; index < this.state.mod + 2; index++) {
+            elements.push(<div key={uid(index)} style={{ width: "300px" }} />);
+        }
+
+        return elements;
+    };
+
+    renderMenu = () => {
+        return this.state.clipSort.map((sort, index) => (
+            <div key={uid(index)} onClick={() => this.updateMenu(sort)}>
+                {sort}
+            </div>
+        ));
     };
 
     render() {
@@ -102,9 +137,11 @@ class previewContainer extends Component {
             clips = <div>{this.props.error}</div>;
         }
 
+        const menu = this.renderMenu();
+
         return (
             <section>
-                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name"]} />
+                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "mod", "clipSort"]} />
 
                 <Info streamer={this.props.videos} type={this.props.match.params} />
                 <div className="top-bar">
@@ -114,14 +151,7 @@ class previewContainer extends Component {
                         <span className="sort-choice" onClick={this.toggleMenu}>
                             {this.state.currentClipSelection}
                         </span>
-                        {this.state.showMenu ? (
-                            <div className="sort-menu">
-                                <div onClick={() => this.updateMenu("day")}>Day</div>
-                                <div onClick={() => this.updateMenu("week")}>Week</div>
-                                <div onClick={() => this.updateMenu("month")}>Month</div>
-                                <div onClick={() => this.updateMenu("all")}>All</div>
-                            </div>
-                        ) : null}
+                        {this.state.showMenu ? <div className="sort-menu">{menu}</div> : null}
                     </div>
                 </div>
                 {this.props.loading ? (
@@ -129,6 +159,7 @@ class previewContainer extends Component {
                 ) : (
                     <section className="clips-container">
                         {clips} <Waypoint topOffset={"430px"} onEnter={this.getMoreVideos} />
+                        {this.renderExtra()}
                     </section>
                 )}
             </section>
@@ -141,8 +172,6 @@ const mapStateToProps = (state, ownProps) => {
     let reducer = "";
     if (ownProps.match.params.streamerID) reducer = "streamersReducer";
     if (ownProps.match.params.gameID) reducer = "gamesReducer";
-
-    console.log(state[reducer][ownProps.match.params[key]]);
 
     return {
         videos: state[reducer][ownProps.match.params[key]],

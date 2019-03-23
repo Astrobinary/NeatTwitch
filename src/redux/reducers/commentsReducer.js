@@ -1,5 +1,4 @@
 import update from "immutability-helper";
-const arrayToTree = require("array-to-tree");
 
 const initialState = { loading: false, error: null };
 

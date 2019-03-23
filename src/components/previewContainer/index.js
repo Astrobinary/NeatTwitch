@@ -9,6 +9,7 @@ import SimpleStorage from "react-simple-storage";
 import Waypoint from "react-waypoint";
 import Info from "../clipsInfo";
 import PreviewItem from "../previewItem";
+import ToTop from "../toTop";
 
 import optionIcon from "../../images/sort.svg";
 import Loading from "../loading";
@@ -85,8 +86,6 @@ class previewContainer extends Component {
     getClips = () => {
         if (this.props.videos[this.state.currentClipSelection].length < 1) {
             return <div>No clips found...</div>;
-        } else {
-            if (this.state.mod === 0) this.setState({ mod: this.props.videos[this.state.currentClipSelection].length % 6 });
         }
 
         return this.props.videos[this.state.currentClipSelection].map((x, index, arr) => (
@@ -102,8 +101,10 @@ class previewContainer extends Component {
 
     renderExtra = () => {
         let elements = [];
+        let amount = 0;
+        if (this.props.videos !== undefined) if (this.props.videos[this.state.currentClipSelection] !== undefined) amount = this.props.videos[this.state.currentClipSelection].length % 6;
 
-        for (let index = 0; index < this.state.mod + 2; index++) {
+        for (let index = 0; index < amount + 2; index++) {
             elements.push(<div key={uid(index)} style={{ width: "300px" }} />);
         }
 
@@ -138,11 +139,12 @@ class previewContainer extends Component {
         }
 
         const menu = this.renderMenu();
+        let extra = this.renderExtra();
 
         return (
             <section>
                 <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "mod", "clipSort"]} />
-
+                <ToTop />
                 <Info streamer={this.props.videos} type={this.props.match.params} />
                 <div className="top-bar">
                     <div className="sorting">
@@ -158,8 +160,11 @@ class previewContainer extends Component {
                     loadGif
                 ) : (
                     <section className="clips-container">
-                        {clips} <Waypoint topOffset={"430px"} onEnter={this.getMoreVideos} />
-                        {this.renderExtra()}
+                        {clips}
+                        {extra}
+                        <div style={{ width: "100%" }}>
+                            <Waypoint topOffset={"500px"} onEnter={this.getMoreVideos} />
+                        </div>
                     </section>
                 )}
             </section>

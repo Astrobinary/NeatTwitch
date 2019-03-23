@@ -8,7 +8,7 @@ import "./streamers.scss";
 import Img from "react-image";
 import Waypoint from "react-waypoint";
 import Loading from "../../components/loading";
-
+import Totop from "../../components/toTop";
 import optionIcon from "../../images/sort.svg";
 import missingPreview from "../../images/streamerload.png";
 
@@ -103,6 +103,7 @@ class Streamers extends Component {
         return (
             <section className="Streamers">
                 <SimpleStorage parent={this} blacklist={["showMenu", "offset", "streamersSort"]} />
+                <Totop />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
                     <span>SORT BY</span>

@@ -1,5 +1,4 @@
 const shortid = require("shortid");
-const arrayToTree = require("array-to-tree");
 
 export const createComment = (message, videoID, parent, reply) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
@@ -41,28 +40,6 @@ export const createComment = (message, videoID, parent, reply) => {
             .catch(err => {
                 dispatch({ type: "CREATE_COMMENT_FAILED", err });
             });
-
-        // firestore
-        //     .collection("videos")
-        //     .doc(videoID)
-        //     .set({ videoID, comments: {} })
-        //     .then(() => {
-        //         firestore
-        //             .collection("videos")
-        //             .doc(videoID)
-        //             .collection("comments")
-        //             .doc(randomId)
-        //             .set({ ...post })
-        //             .then(() => {
-        //                 dispatch({ type: "CREATE_COMMENT_SUCCESS", payload });
-        //             })
-        //             .catch(err => {
-        //                 dispatch({ type: "CREATE_COMMENT_FAILED", err });
-        //             });
-        //     })
-        //     .catch(err => {
-        //         dispatch({ type: "CREATE_COMMENT_FAILED", err });
-        //     });
     };
 };
 
@@ -115,7 +92,7 @@ export const userVote = (messageID, videoID, index, direction, voter) => {
             .runTransaction(transaction => {
                 return transaction.get(sfDocRef).then(sfDoc => {
                     if (!sfDoc.exists) {
-                        throw "Document does not exist";
+                        throw new Error("Doc does not exist to upvote");
                     }
 
                     if (direction === "up") {

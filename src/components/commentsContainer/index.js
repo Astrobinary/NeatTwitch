@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createComment, fetchComments, userVote } from "../../redux/actions/commentActions";
 import "./comments.scss";
+
+import Totop from "../toTop";
 import Comment from "../comment";
 const shortid = require("shortid");
 const arrayToTree = require("array-to-tree");
@@ -35,7 +37,12 @@ class commentsContainer extends Component {
     };
 
     render() {
-        return <section>{this.getComments()}</section>;
+        return (
+            <section>
+                {this.getComments()}
+                <Totop />
+            </section>
+        );
     }
 }
 

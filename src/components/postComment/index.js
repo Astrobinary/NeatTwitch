@@ -33,12 +33,9 @@ class PostComment extends Component {
     }
 
     onRouteChanged = () => {
+        this.textInput.current.disabled = false;
+        this.textInput.current.style.opacity = "0.8";
 
-        if(this.text){
-            this.textInput.current.disabled = false;
-            this.textInput.current.style.opacity = "0.8";
-        }
-       
         this.setState({ message: "", canPost: true, postText: "post" });
     };
     handleChange = e => {
@@ -49,7 +46,6 @@ class PostComment extends Component {
     };
 
     parseText = text => {
-        this.setState({ canPost: false });
         const regex = /:(.+?):/gm;
         let matches = text.match(regex);
 
@@ -90,8 +86,6 @@ class PostComment extends Component {
             author: this.props.auth.displayName,
             points: 0
         };
-
-        // message, videoID, msgID, index
 
         this.setState({ canPost: false, postText: "posted!", posted: true, post: { ...temp } });
         this.props.createComment(temp.message, this.props.videoID, this.props.parent);

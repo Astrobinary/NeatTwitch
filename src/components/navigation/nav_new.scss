@@ -210,6 +210,21 @@ Pink Highlight: #ed4f74
     border-bottom: 1px solid #0fa5a5;
 }
 
+.go-up {
+    position: fixed;
+    bottom: 25px;
+    left: right;
+    right: 25px;
+    z-index: 210;
+    color: white;
+    background-color: black;
+    border-radius: 110px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+}
+
 @media only screen and (max-width: 640px) {
     .Navagation-mobile {
         display: flex;

@@ -17,10 +17,17 @@ const streamersReducer = (state = initialState, action) => {
                 error: null
             };
         case FETCH_STREAMERS_SUCCESS:
+            let streamers;
+
+            if (state.twitch === undefined) {
+                streamers = update(state, { twitch: { $set: action.payload } });
+            } else {
+                streamers = update(state, { twitch: { $push: action.payload } });
+            }
+
             return {
-                ...state,
+                ...streamers,
                 loading: false,
-                twitch: [...action.payload],
                 offset: action.offset
             };
         case FETCH_STREAMERS_FAILURE:

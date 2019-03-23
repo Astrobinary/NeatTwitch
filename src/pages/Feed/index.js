@@ -6,6 +6,7 @@ import { fetchFeedVideos, fetchMoreFeedVideos } from "../../redux/actions/feedAc
 import SimpleStorage from "react-simple-storage";
 import Waypoint from "react-waypoint";
 import Loading from "../../components/loading";
+import Totop from "../../components/toTop";
 
 import PreviewItem from "../../components/previewItem";
 import optionIcon from "../../images/sort.svg";
@@ -46,8 +47,6 @@ class Feed extends Component {
     toggleMenu = () => {
         this.setState({ showMenu: !this.state.showMenu });
     };
-
-    handleOnDragStart = e => e.preventDefault();
 
     updateMenu = time => {
         let normalize = ["day", "week", "month", "all"];
@@ -102,6 +101,7 @@ class Feed extends Component {
         return (
             <section>
                 <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "responsive", "allSort", "feedItems", "menuComp"]} />
+                <Totop />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
                     <span>SORT TOP CLIPS BY</span>

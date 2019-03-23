@@ -9,7 +9,7 @@ import Img from "react-image";
 import SimpleStorage from "react-simple-storage";
 
 import Loading from "../../components/loading";
-
+import Totop from "../../components/toTop";
 import optionIcon from "../../images/sort.svg";
 import missingPreview from "../../images/gameload.png";
 import "./games.scss";
@@ -61,10 +61,6 @@ class Games extends Component {
 
         this.setState({ showMenu: false, currentGameSort: time, gameItems: items });
 
-        // if (this.props.clips[time] === undefined) {
-        //     this.props.fetchFeedVideos(time);
-        // }
-
         console.log(`Game sort changed: ${time}`);
     };
 
@@ -96,6 +92,7 @@ class Games extends Component {
         return (
             <section className="Games">
                 <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "offset", "gameItems"]} />
+                <Totop />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
                     <span>SORT TOP GAMES BY</span>

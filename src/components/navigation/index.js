@@ -7,7 +7,7 @@ import Axios from "axios";
 
 import searchIcon from "../../images/search.svg";
 import loginIcon from "../../images/login.svg";
-import logoutIcon from "../../images/logout.svg";
+import menuIcon from "../../images/menu.svg";
 import "./nav_new.scss";
 require("firebase/functions");
 
@@ -17,6 +17,7 @@ class navagation extends Component {
 
         this.state = {
             showMenu: false,
+            showUserMenu: false,
             loginText: "Login"
         };
     }
@@ -78,6 +79,10 @@ class navagation extends Component {
         this.setState({ showMenu: !this.state.showMenu });
     };
 
+    toggleUserMenu = () => {
+        this.setState({ showUserMenu: !this.state.showUserMenu });
+    };
+
     logOut = () => {
         this.setState({ loginText: "Login" });
         firebase.auth().signOut();
@@ -119,12 +124,23 @@ class navagation extends Component {
                             <span>{this.state.loginText}</span>
                         </div>
                     ) : (
-                        <div className="full nav-item" onClick={this.logOut} title="Logout">
+                        <div className="full nav-item" onClick={this.toggleUserMenu}>
                             <div>
                                 <img className="nav-avatar" alt="avatar" src={auth.photoURL} />
                                 <div className="nav-name">{auth.displayName}</div>
-                                <img className="nav-logout" src={logoutIcon} alt={"login"} />
+                                <img className="nav-logout" src={menuIcon} alt={"menu"} />
                             </div>
+
+                            {this.state.showUserMenu ? (
+                                <div className="user-menu-contain" onMouseLeave={this.toggleUserMenu}>
+                                    <div className="user-menu-item">favorites</div>
+                                    <div className="user-menu-item">my playlists</div>
+                                    <div className="user-menu-item">settings</div>
+                                    <div className="user-menu-item" onClick={this.logOut}>
+                                        logout
+                                    </div>
+                                </div>
+                            ) : null}
                         </div>
                     )}
                 </nav>

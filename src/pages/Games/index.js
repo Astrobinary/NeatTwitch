@@ -76,7 +76,7 @@ class Games extends Component {
         const gameItems = this.props.gameList.map((x, index) => (
             <Link className="games-item" key={uid(index)} to={`${this.props.match.url}/${encodeURIComponent(x.game.name)}`}>
                 {index === Math.round(this.props.gameList.length / 1.25) ? <Waypoint onEnter={this.getMoreGames} /> : null}
-                <LazyLoad height={214} once>
+                <LazyLoad height={214} offset={400} once>
                     <Img alt={x.game.name} src={[x.game.box.medium, missingPreview]} loader={<img alt="missing" src={missingPreview} />} />
                 </LazyLoad>
             </Link>

@@ -96,7 +96,7 @@ class Streamers extends Component {
 
         return this.props.reducer[this.state.currentStreamerSelection].map((x, index) => (
             <Link className="streamer-item" key={uid(index)} to={`${this.props.match.url}/${x.channel.name}`}>
-                <LazyLoad height={154} once>
+                <LazyLoad height={154} offset={300} once>
                     <Img alt={x.channel.name} src={[x.channel.logo.replace("300x300", "150x150"), missingPreview]} loader={<img alt="missing" src={missingPreview} />} />{" "}
                 </LazyLoad>
                 <div className="streamer-name">{x.channel.name}</div>

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchStreamVideos, fetchMoreStreamerVideos } from "../../redux/actions/streamerActions";
 import { fetchGameVideos, fetchMoreGameVideos } from "../../redux/actions/gameActions";
-
+import LazyLoad from "react-lazyload";
 import { uid } from "react-uid";
 import SimpleStorage from "react-simple-storage";
 import Waypoint from "react-waypoint";
@@ -90,7 +90,9 @@ class previewContainer extends Component {
 
         return this.props.videos[this.state.currentClipSelection].map((x, index, arr) => (
             <Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
-                <PreviewItem video={x} />
+                <LazyLoad height={174} offset={500} once>
+                    <PreviewItem video={x} />
+                </LazyLoad>
                 {index === Math.round(this.props.videos[this.state.currentClipSelection].length / 1.25) ? <Waypoint onEnter={this.getMoreVideos} /> : null}
             </Link>
         ));

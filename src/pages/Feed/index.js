@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import { uid } from "react-uid";
 import { fetchFeedVideos, fetchMoreFeedVideos } from "../../redux/actions/feedActions";
 import SimpleStorage from "react-simple-storage";
+import LazyLoad from "react-lazyload";
 import Waypoint from "react-waypoint";
 import Loading from "../../components/loading";
 import Totop from "../../components/toTop";
-
 import PreviewItem from "../../components/previewItem";
 import optionIcon from "../../images/sort.svg";
 
@@ -40,7 +40,6 @@ class Feed extends Component {
     }
 
     componentWillMount() {
-        console.log();
         if (this.props.clips[this.state.currentFeedSelection] === undefined) this.props.fetchFeedVideos(this.state.currentFeedSelection);
     }
 
@@ -67,7 +66,9 @@ class Feed extends Component {
 
         let clips = clip.map((x, index, arr) => (
             <Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
-                <PreviewItem video={x} />
+                <LazyLoad height={174} offset={500} once>
+                    <PreviewItem video={x} />
+                </LazyLoad>
                 {index === Math.round(clip.length / 1.25) ? <Waypoint onEnter={this.getMoreVideos} /> : null}
             </Link>
         ));

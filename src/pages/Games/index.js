@@ -73,9 +73,10 @@ class Games extends Component {
     };
 
     render() {
-        const gameItems = this.props.gameList.map(x => (
-            <Link className="games-item" key={uid(x)} to={`${this.props.match.url}/${x.game.name}`}>
-                <LazyLoad height={213} offset={413} once>
+        const gameItems = this.props.gameList.map((x, index) => (
+            <Link className="games-item" key={uid(index)} to={`${this.props.match.url}/${encodeURIComponent(x.game.name)}`}>
+                {index === Math.round(this.props.gameList.length / 1.25) ? <Waypoint onEnter={this.getMoreGames} /> : null}
+                <LazyLoad height={214} once>
                     <Img alt={x.game.name} src={[x.game.box.medium, missingPreview]} loader={<img alt="missing" src={missingPreview} />} />
                 </LazyLoad>
             </Link>
@@ -102,9 +103,7 @@ class Games extends Component {
                     {this.state.showMenu ? <div className="sort-menu">{menu}</div> : null}
                 </div>
 
-                <section className="games-container">
-                    {this.props.loading ? loadGif : gameItems} <Waypoint topOffset={"430px"} onEnter={this.getMoreGames} />
-                </section>
+                <section className="games-container">{this.props.loading ? loadGif : gameItems}</section>
             </section>
         );
     }

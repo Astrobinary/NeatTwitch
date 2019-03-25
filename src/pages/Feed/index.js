@@ -65,14 +65,18 @@ class Feed extends Component {
     getClips = () => {
         const clip = this.props.clips[this.state.currentFeedSelection];
 
-        return clip.map((x, index, arr) => (
-            <Link onDragStart={this.handleOnDragStart} key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
+        let clips = clip.map((x, index, arr) => (
+            <Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
                 <PreviewItem video={x} />
+                {index === Math.round(clip.length / 1.25) ? <Waypoint onEnter={this.getMoreVideos} /> : null}
             </Link>
         ));
+
+        return clips;
     };
     getMoreVideos = () => {
         if (this.props.cursor) this.props.fetchMoreFeedVideos(this.state.currentFeedSelection, this.props.cursor);
+        console.log("fetch more from feed!");
     };
 
     renderMenu = () => {
@@ -81,6 +85,18 @@ class Feed extends Component {
                 {sort}
             </div>
         ));
+    };
+
+    renderExtra = () => {
+        let elements = [];
+        let amount = 0;
+        if (this.props.clips !== undefined) if (this.props.clips[this.state.currentFeedSelection] !== undefined) amount = this.props.clips[this.state.currentFeedSelection].length % 6;
+
+        for (let index = 0; index < amount + 2; index++) {
+            elements.push(<div key={uid(index)} style={{ width: "300px" }} />);
+        }
+
+        return elements;
     };
 
     render() {
@@ -97,6 +113,7 @@ class Feed extends Component {
         }
 
         const menu = this.renderMenu();
+        let extra = this.renderExtra();
 
         return (
             <section>
@@ -113,7 +130,8 @@ class Feed extends Component {
 
                 <section className="clips-container-feed">
                     {this.props.loading ? loadGif : clips}
-                    <Waypoint topOffset={"174px"} onEnter={this.getMoreVideos} />
+                    {extra}
+                    {/* <div style={{ width: "100%" }}>{this.props.loading ? null : <Waypoint onEnter={this.getMoreVideos} />}</div> */}
                 </section>
             </section>
         );

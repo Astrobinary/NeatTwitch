@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 
-import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE, FETCH_MORE_STREAMER_VIDEOS_REQUEST, FETCH_MORE_STREAMER_VIDEOS_SUCCESS, FETCH_MORE_STREAMER_VIDEOS_FAILURE, FETCH_FOLLOWED_STREAMERS_REQUEST, FETCH_FOLLOWED_STREAMERS_SUCCESS, FETCH_FOLLOWED_STREAMERS_FAILURE } from "../actions/streamerActions";
+import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE, FETCH_MORE_STREAMER_VIDEOS_REQUEST, FETCH_MORE_STREAMER_VIDEOS_SUCCESS, FETCH_MORE_STREAMER_VIDEOS_FAILURE, FETCH_FOLLOWED_STREAMERS_REQUEST, FETCH_FOLLOWED_STREAMERS_SUCCESS, FETCH_FOLLOWED_STREAMERS_FAILURE, FETCH_MORE_FOLLOWED_STREAMERS_REQUEST, FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS, FETCH_MORE_FOLLOWED_STREAMERS_FAILURE } from "../actions/streamerActions";
 
 const initialState = {
     loading: false,
@@ -47,9 +47,40 @@ const streamersReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                followed: [...action.payload]
+                followed: [...action.payload],
+                followTotal: action.total
             };
         case FETCH_FOLLOWED_STREAMERS_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
+
+        case FETCH_MORE_FOLLOWED_STREAMERS_REQUEST:
+            return {
+                ...state,
+                error: null
+            };
+        case FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS:
+            let followedStreamers;
+
+            console.log(action);
+
+            if (state.followed === undefined) {
+                console.log("set");
+                followedStreamers = update(state, { followed: { $set: action.payload } });
+            } else {
+                console.log("push");
+                followedStreamers = update(state, { followed: { $push: action.payload } });
+            }
+
+            return {
+                ...state,
+                ...followedStreamers,
+                loading: false
+            };
+        case FETCH_MORE_FOLLOWED_STREAMERS_FAILURE:
             return {
                 ...state,
                 loading: false,

@@ -166,29 +166,62 @@ export const fetchFollwedStreamersBegin = () => ({
     type: FETCH_FOLLOWED_STREAMERS_REQUEST
 });
 
-export const fetchFollwedStreamersSucess = (streamers, sort) => ({
+export const fetchFollwedStreamersSucess = (streamers, total) => ({
     type: FETCH_FOLLOWED_STREAMERS_SUCCESS,
     payload: streamers,
-    sort
+    total
 });
 
-export const fetchFollwedStreamersFailure = (error, userObj) => ({
+export const fetchFollwedStreamersFailure = error => ({
     type: FETCH_FOLLOWED_STREAMERS_FAILURE,
-    payload: error,
-    user: userObj
+    payload: error
 });
 
-export function fetchFollowedStreamers(id, type) {
+export function fetchFollowedStreamers(id) {
     return dispatch => {
         dispatch(fetchFollwedStreamersBegin());
         return axios
             .get(`${api}/users/${id}/follows/channels?sortby=last_broadcast&limit=100`, options)
             .then(res => {
-                dispatch(fetchFollwedStreamersSucess(res.data.follows, type));
+                dispatch(fetchFollwedStreamersSucess(res.data.follows, res.data._total));
                 return res.data.top;
             })
             .catch(error => {
                 dispatch(fetchFollwedStreamersFailure(error.response));
+            });
+    };
+}
+
+export const FETCH_MORE_FOLLOWED_STREAMERS_REQUEST = "FETCH_MORE_FOLLOWED_STREAMERS_REQUEST";
+export const FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS = "FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS";
+export const FETCH_MORE_FOLLOWED_STREAMERS_FAILURE = "FETCH_MORE_FOLLOWED_STREAMERS_FAILURE";
+
+export const fetchMoreFollwedStreamersBegin = () => ({
+    type: FETCH_MORE_FOLLOWED_STREAMERS_REQUEST
+});
+
+export const fetchMoreFollwedStreamersSucess = (streamers, offset) => ({
+    type: FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS,
+    payload: streamers,
+    offset
+});
+
+export const fetchMoreFollwedStreamersFailure = error => ({
+    type: FETCH_MORE_FOLLOWED_STREAMERS_FAILURE,
+    payload: error
+});
+
+export function fetchMoreFollowedStreamers(id, offset) {
+    return dispatch => {
+        dispatch(fetchMoreFollwedStreamersBegin());
+        return axios
+            .get(`${api}/users/${id}/follows/channels?sortby=last_broadcast&limit=100&offset=${offset}`, options)
+            .then(res => {
+                dispatch(fetchMoreFollwedStreamersSucess(res.data.follows, offset));
+                return res.data.follows;
+            })
+            .catch(error => {
+                dispatch(fetchMoreFollwedStreamersFailure(error.response));
             });
     };
 }

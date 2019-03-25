@@ -18,7 +18,6 @@ class toTop extends Component {
     }
 
     handleScroll = x => {
-        const h = window.innerHeight;
         const height = window.pageYOffset;
         if (height < 400 && this.state.showBtn) return this.setState({ showBtn: false });
         if (height > 500 && !this.state.showBtn) return this.setState({ showBtn: true });

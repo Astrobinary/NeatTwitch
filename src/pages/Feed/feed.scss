@@ -12,6 +12,7 @@
 .clips-container-feed {
     @extend .clips-container;
     margin-top: 10px;
+    overflow: hidden;
 }
 
 .top-bar-feed {

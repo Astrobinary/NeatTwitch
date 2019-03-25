@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchStreamers, fetchMoreStreamers, fetchFollowedStreamers } from "../../redux/actions/streamerActions";
+import { fetchStreamers, fetchMoreStreamers, fetchFollowedStreamers, fetchMoreFollowedStreamers } from "../../redux/actions/streamerActions";
 import { Link } from "react-router-dom";
 import SimpleStorage from "react-simple-storage";
+
+import LazyLoad from "react-lazyload";
 import { uid } from "react-uid";
 import "./streamers.scss";
 import Img from "react-image";
@@ -33,35 +35,58 @@ class Streamers extends Component {
             showMenu: false,
             currentStreamerSelection: current,
             streamersSort: items,
-            offset: 0
+            twitchOffset: 0,
+            followedOffset: 0
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.auth.isEmpty !== this.props.auth.isEmpty) {
+            if (this.props.reducer.followed === undefined && this.state.currentStreamerSelection === "followed") this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7));
+        }
+    }
+    onRouteChanged = () => {
+        this.props.fetchComments(this.props.videoID);
+    };
+
     componentDidMount() {
-        if (this.state.currentStreamerSelection === "followed" && this.props.auth.isEmpty) this.setState({ currentStreamerSelection: "twitch", showMenu: false });
-        if (this.props.reducer.twitch === undefined) this.props.fetch();
-        if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7), "followed");
+        // if (this.state.currentStreamerSelection === "followed" && this.props.auth.isEmpty) this.setState({ currentStreamerSelection: "twitch", showMenu: false });
+        if (this.props.reducer.twitch === undefined && this.state.currentStreamerSelection === "twitch") this.props.fetch();
+        if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7));
     }
 
     toggleMenu = () => {
         this.setState({ showMenu: !this.state.showMenu });
     };
 
-    updateMenu = time => {
-        if (time === "followed") if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7), "followed");
+    updateMenu = sort => {
+        if (sort === "followed") if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7));
+        if (sort === "twitch") if (this.props.reducer.twitch === undefined) this.props.fetch();
 
         let normalize = ["twitch", "followed"];
 
         let items = normalize.filter(item => {
-            return item !== time;
+            return item !== sort;
         });
 
-        this.setState({ currentStreamerSelection: time, streamersSort: items, showMenu: !this.state.showMenu });
+        this.setState({ currentStreamerSelection: sort, streamersSort: items, showMenu: !this.state.showMenu });
     };
 
     getMoreStreamers = () => {
-        this.props.fetchAgain(this.state.offset + 102);
-        this.setState({ offset: this.state.offset + 102 });
+        console.log("more?");
+
+        if (this.state.currentStreamerSelection === "twitch") {
+            this.props.fetchAgain(this.state.twitchOffset + 102);
+            this.setState({ twitchOffset: this.state.twitchOffset + 102 });
+        } else {
+            let offSet = this.props.reducer[this.state.currentStreamerSelection].length;
+            console.log(offSet);
+
+            if (offSet + 1 >= this.props.reducer.followTotal) return;
+
+            this.props.fetchMoreFollowedStreamers(this.props.auth.uid.substr(7), offSet - 1);
+            this.setState({ followedOffset: this.state.followedOffset + offSet });
+        }
     };
 
     renderStreamers = () => {
@@ -69,10 +94,13 @@ class Streamers extends Component {
             return <div>No streamers found...</div>;
         }
 
-        return this.props.reducer[this.state.currentStreamerSelection].map(x => (
-            <Link className="streamer-item" key={uid(x)} to={`${this.props.match.url}/${x.channel.name}`}>
-                <Img alt={x.channel.name} src={[x.channel.logo.replace("300x300", "150x150"), missingPreview]} loader={<img alt="missing" src={missingPreview} />} />
+        return this.props.reducer[this.state.currentStreamerSelection].map((x, index) => (
+            <Link className="streamer-item" key={uid(index)} to={`${this.props.match.url}/${x.channel.name}`}>
+                <LazyLoad height={154} once>
+                    <Img alt={x.channel.name} src={[x.channel.logo.replace("300x300", "150x150"), missingPreview]} loader={<img alt="missing" src={missingPreview} />} />{" "}
+                </LazyLoad>
                 <div className="streamer-name">{x.channel.name}</div>
+                {index === Math.round(this.props.reducer[this.state.currentStreamerSelection].length / 1.25) ? <Waypoint onEnter={this.getMoreStreamers} /> : null}
             </Link>
         ));
     };
@@ -92,6 +120,10 @@ class Streamers extends Component {
             streamers = this.renderStreamers();
         }
 
+        if (this.state.currentStreamerSelection === "followed" && this.props.auth.isEmpty) {
+            streamers = <div>You need to sign in to view your followed streamers.</div>;
+        }
+
         const loadGif = (
             <div className="streamer-loader">
                 <Loading />
@@ -102,7 +134,7 @@ class Streamers extends Component {
 
         return (
             <section className="Streamers">
-                <SimpleStorage parent={this} blacklist={["showMenu", "offset", "streamersSort"]} />
+                <SimpleStorage parent={this} blacklist={["showMenu", "offset", "streamersSort", "twitchOffset", "followedOffset"]} />
                 <Totop />
                 <div className="sorting">
                     <img src={optionIcon} alt="options" />
@@ -114,10 +146,7 @@ class Streamers extends Component {
                     <span>STREAMERS</span>
                 </div>
 
-                <section className="streamer-container">
-                    {this.props.loading ? loadGif : streamers}
-                    <Waypoint topOffset={"430px"} onEnter={this.getMoreStreamers} />
-                </section>
+                <section className="streamer-container">{this.props.loading ? loadGif : streamers}</section>
             </section>
         );
     }
@@ -138,7 +167,8 @@ const mapDispatchToProps = dispatch => {
     return {
         fetch: () => dispatch(fetchStreamers()),
         fetchAgain: offset => dispatch(fetchMoreStreamers(offset)),
-        fetchFollowedStreamers: (id, sort) => dispatch(fetchFollowedStreamers(id, sort))
+        fetchFollowedStreamers: id => dispatch(fetchFollowedStreamers(id)),
+        fetchMoreFollowedStreamers: (id, offset) => dispatch(fetchMoreFollowedStreamers(id, offset))
     };
 };
 

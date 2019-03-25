@@ -91,6 +91,7 @@ class previewContainer extends Component {
         return this.props.videos[this.state.currentClipSelection].map((x, index, arr) => (
             <Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
                 <PreviewItem video={x} />
+                {index === Math.round(this.props.videos[this.state.currentClipSelection].length / 1.25) ? <Waypoint onEnter={this.getMoreVideos} /> : null}
             </Link>
         ));
     };
@@ -162,9 +163,6 @@ class previewContainer extends Component {
                     <section className="clips-container">
                         {clips}
                         {extra}
-                        <div style={{ width: "100%" }}>
-                            <Waypoint topOffset={"500px"} onEnter={this.getMoreVideos} />
-                        </div>
                     </section>
                 )}
             </section>

@@ -90,7 +90,7 @@ class PostComment extends Component {
         };
 
         this.setState({ canPost: false, postText: "posted!", posted: true, post: { ...temp } });
-        this.props.createComment(temp.message, this.props.videoID, this.props.parent);
+        this.props.createComment(temp.message, this.props.videoID, this.props.parent, this.props.title);
     };
 
     render() {
@@ -123,7 +123,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createComment: (comment, id, parent, reply) => dispatch(createComment(comment, id, parent))
+        createComment: (comment, id, parent, title) => dispatch(createComment(comment, id, parent, title))
     };
 };
 

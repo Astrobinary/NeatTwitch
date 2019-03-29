@@ -39,7 +39,7 @@ class Feed extends Component {
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.props.clips[this.state.currentFeedSelection] === undefined) this.props.fetchFeedVideos(this.state.currentFeedSelection);
     }
 

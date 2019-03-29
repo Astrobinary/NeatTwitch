@@ -68,10 +68,8 @@ const streamersReducer = (state = initialState, action) => {
             console.log(action);
 
             if (state.followed === undefined) {
-                console.log("set");
                 followedStreamers = update(state, { followed: { $set: action.payload } });
             } else {
-                console.log("push");
                 followedStreamers = update(state, { followed: { $push: action.payload } });
             }
 

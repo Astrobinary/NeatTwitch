@@ -1,13 +1,11 @@
 const shortid = require("shortid");
 
-export const createComment = (message, videoID, parent, reply) => {
+export const createComment = (message, videoID, parent, title) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         const firebase = getFirebase().auth();
 
         const randomId = shortid.generate();
-
-        if (parent === undefined) parent = null;
 
         let post = {
             message,
@@ -19,18 +17,16 @@ export const createComment = (message, videoID, parent, reply) => {
             timestamp: Date.now(),
             points: 0,
             voted: [],
-            parent: parent
+            title
         };
+        parent && (post.parent = parent);
 
         let payload = {
             post,
-            videoID,
-            reply
+            videoID
         };
 
         firestore
-            .collection("videos")
-            .doc(videoID)
             .collection("comments")
             .doc(randomId)
             .set({ ...post })
@@ -43,35 +39,46 @@ export const createComment = (message, videoID, parent, reply) => {
     };
 };
 
-export const fetchComments = id => {
+export const fetchComments = (id) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
+        let docRef;
 
-        let docRef = firestore
-            .collection(`videos/${id}/comments`)
-            .orderBy("points", "desc")
-            .orderBy("timestamp", "desc");
+       
+            docRef = firestore
+                .collection(`comments`)
+                .where("videoID", "==", `${id}`)
+                .orderBy("points", "desc")
+                .orderBy("timestamp", "desc");
+        
 
         docRef
             .get()
             .then(doc => {
-                let comments = {};
                 let temp = [];
+
+                let lastVisible = doc.docs[doc.docs.length - 1];
 
                 doc.forEach(snap => {
                     if (snap.exists) temp.push(snap.data());
                 });
 
-                comments[id] = temp;
+                if (doc.docs.length < 10) lastVisible = undefined;
+
+                let payload = {
+                    list: temp,
+                    cursor: lastVisible
+                };
 
                 dispatch({
                     type: "GET_COMMENT_SUCCESS",
-                    comments,
+                    payload,
                     videoID: id
                 });
-                return comments;
+                return payload;
             })
             .catch(err => {
+                console.log(err);
                 dispatch({ type: "GET_COMMENT_FAILED", err });
             });
     };
@@ -82,11 +89,7 @@ export const userVote = (messageID, videoID, index, direction, voter) => {
         const firestore = getFirestore();
         let newPoints;
 
-        var sfDocRef = firestore
-            .collection("videos")
-            .doc(videoID)
-            .collection("comments")
-            .doc(messageID);
+        var sfDocRef = firestore.collection("comments").doc(messageID);
 
         return firestore
             .runTransaction(transaction => {

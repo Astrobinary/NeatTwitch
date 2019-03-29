@@ -82,9 +82,9 @@ class playlistPlayer extends Component {
                 </section>
 
                 <section className="playlist-comments">
-                    <PostComment videoID={this.props.match.params.videoID} placeHolder={"any thoughts?"} />
-                    <div className="comment-jump">user comments</div>
-                    <CommentsContainer videoID={this.props.match.params.videoID} />
+                    <PostComment videoID={this.props.match.params.videoID} placeHolder={"any thoughts?"} title={this.state.video.title} />
+
+                    <CommentsContainer videoID={this.props.match.params.videoID} title={this.state.video.title} />
                 </section>
             </div>
         );

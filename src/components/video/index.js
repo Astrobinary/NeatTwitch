@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+import { connect } from "react-redux";
+
+import { favoriteVideo, fetchFavorite } from "../../redux/actions/videoActions";
 import "babel-polyfill";
 import moment from "moment";
 
@@ -8,6 +11,7 @@ import downloadIcon from "./download.svg";
 import shareIcon from "./share.svg";
 import vodIcon from "./vod.svg";
 import likeIcon from "./like.svg";
+import nolikeIcon from "./nolike.svg";
 import "./video.scss";
 
 class video extends Component {
@@ -41,6 +45,27 @@ class video extends Component {
         return url;
     }
 
+    addFav = () => {
+        console.log("here");
+        this.props.favoriteVideo(this.props.videoInfo.slug, this.props.videoInfo.thumbnails.medium, this.props.videoInfo.title, this.props.videoInfo.broadcaster.display_name);
+    };
+
+    removeFav = () => {
+        console.log("remove it");
+    };
+
+    isFav = () => {
+        if (!this.props.auth.isEmpty) {
+            if (this.props.favorites.favs.length === 0) {
+                this.props.fetchFavorite(this.props.videoInfo.slug);
+            } else if (this.props.favorites.favs[this.props.videoInfo.slug] === undefined) {
+                this.props.fetchFavorite(this.props.videoInfo.slug);
+            }
+        }
+
+        return this.props.favorites.favs[this.props.videoInfo.slug] === undefined ? false : true;
+    };
+
     render() {
         return (
             <div ref={this.sizeRef} className="player-contain" style={{ backgroundImage: `url(${this.props.videoInfo.thumbnails.medium})` }}>
@@ -70,7 +95,7 @@ class video extends Component {
                     </div>
                     <div className="player-info-right">
                         <div className="player-icons">
-                            <img src={likeIcon} alt="like icon" title="like" />
+                            {this.isFav() ? <img onClick={this.removeFav} src={likeIcon} alt="like icon" title="like" /> : <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />}
                             {/* <div className="like-icon">like</div> */}
 
                             <img src={shareIcon} alt="share icon" title="share" />
@@ -93,4 +118,21 @@ class video extends Component {
     }
 }
 
-export default video;
+const mapStateToProps = state => {
+    return {
+        favorites: state.videoReducer,
+        auth: state.firebaseReducer.auth
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        favoriteVideo: (videoID, thumbnail, title, streamer) => dispatch(favoriteVideo(videoID, thumbnail, title, streamer)),
+        fetchFavorite: videoID => dispatch(fetchFavorite(videoID))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(video);

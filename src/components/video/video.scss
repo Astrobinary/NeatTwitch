@@ -56,9 +56,11 @@ iframe {
 
 .player-link {
     display: inline-block;
+    transition: all 0.3s ease;
     &:hover {
         cursor: pointer;
-        color: #ed4f74;
+        // color: #ed4f74;
+        border-bottom: 1px solid #ed4f74;
     }
 }
 
@@ -132,6 +134,7 @@ iframe {
         width: 20px;
         padding: 10px 10px;
         opacity: 0.5;
+        transition: all 0.3s ease;
         &:hover {
             opacity: 1;
             cursor: pointer;

@@ -2,37 +2,35 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createComment, fetchComments, userVote } from "../../redux/actions/commentActions";
 import "./comments.scss";
-
 import Totop from "../toTop";
 import Comment from "../comment";
 const shortid = require("shortid");
 const arrayToTree = require("array-to-tree");
 
 class commentsContainer extends Component {
-    componentDidMount() {
-        this.props.fetchComments(this.props.videoID);
-    }
+    fetch = () => {
+        if (this.props.comments[this.props.videoID] === undefined) this.props.fetchComments(this.props.videoID);
+    };
 
-    componentDidUpdate(prevProps) {
-        if (this.props.videoID !== prevProps.videoID) {
-            this.onRouteChanged();
-        }
-    }
-    onRouteChanged = () => {
-        this.props.fetchComments(this.props.videoID);
+    hasComments = () => {
+        return this.props.comments[this.props.videoID] !== undefined;
     };
 
     getComments = () => {
-        if (this.props.comments[this.props.videoID] === undefined) {
-            return <div>Error Loading, try again.</div>;
-        } else {
-            if (this.props.comments[this.props.videoID].length === 0) return <div style={{ color: "white", textAlign: "left", opacity: "0.6" }}>Be the first to comment!</div>;
+        if (this.props.comments[this.props.videoID] !== undefined) {
+            if (this.props.comments[this.props.videoID].list.length === 0) return !this.props.auth.isEmpty ? <div style={{ marginTop: "-10px", color: "white", textAlign: "center", opacity: "0.6" }}>No comments: Be the first to comment!</div> : <div style={{ color: "white", textAlign: "center", opacity: "0.6" }}>No comments: Why not sign in and share a thought?</div>;
 
-            let tree = arrayToTree(this.props.comments[this.props.videoID], {
+            let tree = arrayToTree(this.props.comments[this.props.videoID].list, {
                 parentProperty: "parent",
                 customID: "messageID"
             });
-            return tree.map((comment, index) => <Comment videoID={this.props.videoID} {...comment} index={index} key={shortid.generate()} />);
+            return tree.map((comment, index) => <Comment videoID={this.props.videoID} {...comment} index={index} key={shortid.generate()} title={this.props.title} />);
+        } else {
+            return (
+                <div className="view-comments" onClick={this.fetch} style={{ textAlign: "center" }}>
+                    view comments
+                </div>
+            );
         }
     };
 
@@ -56,7 +54,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         createComment: (comment, id) => dispatch(createComment(comment, id)),
-        fetchComments: id => dispatch(fetchComments(id)),
+        fetchComments: (id, more, doc) => dispatch(fetchComments(id, more, doc)),
         commentVote: (messageId, videoID, index, direction, voter) => dispatch(userVote(messageId, videoID, index, direction, voter))
     };
 };

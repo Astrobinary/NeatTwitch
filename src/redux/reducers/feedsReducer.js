@@ -19,6 +19,7 @@ const feedsReducer = (state = initialState, action) => {
             let newState = update(state[action.time], { $set: action.payload });
 
             return {
+                ...state,
                 ...newState,
                 loading: false
             };

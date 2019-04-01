@@ -56,6 +56,7 @@ const Index = () => (
 
                     <Route exact path="/user/:user" component={Profile} />
                     <Route exact path="/user/:user/favorites" component={Favorites} />
+                    <Route exact path="/user/:user/favorites/:videoID" component={_playlistPlayer} />
 
                     <Route exact path="/:videoID" component={_singlePlayer} />
                 </Switch>

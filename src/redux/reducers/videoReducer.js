@@ -1,25 +1,24 @@
 import update from "immutability-helper";
 
-const initialState = { loading: false, error: null, favs: [] };
+const initialState = { loading: false, error: null, favs: [], myFavs: [] };
 
 const videoReducer = (state = initialState, action) => {
     switch (action.type) {
         case "FAV_ADDED_SUCCESS":
             let list;
-            console.log(action.favorite);
 
             if (state.favs.length === 0) {
                 list = update(state, {
                     favs: {
                         $set: {
-                            [action.favorite.videoID]: [action.favorite]
+                            [action.favorite.slug]: [action.favorite]
                         }
                     }
                 });
             } else {
                 list = update(state, {
                     favs: {
-                        [action.favorite.videoID]: {
+                        [action.favorite.slug]: {
                             $set: [action.favorite]
                         }
                     }
@@ -31,10 +30,65 @@ const videoReducer = (state = initialState, action) => {
                 ...list,
                 loading: false
             };
+
         case "FAV_ADDED_FAILED":
             return {
                 ...state,
                 error: action.err.toString()
+            };
+
+        case "FAV_ALL_SUCCESS":
+            let newFavs;
+
+            if (state.myFavs.length === 0) {
+                newFavs = update(state, {
+                    myFavs: {
+                        $set: action.payload.list
+                    },
+                    favCursor: {
+                        $set: action.payload.cursor
+                    }
+                });
+            }
+            return {
+                ...state,
+                ...newFavs,
+                loading: false
+            };
+
+        case "FAV_ALL_FAILED":
+            return {
+                ...state,
+                error: action.err.toString()
+            };
+
+        case "FAV_REMOVE_SUCCESS":
+            let videoID = action.videoID;
+
+            let updatedList = update(state, {
+                favs: {
+                    $unset: [videoID]
+                }
+            });
+
+            return {
+                ...state,
+                ...updatedList,
+
+                loading: false
+            };
+
+        case "FAV_REMOVE_FAILED":
+            return {
+                ...state,
+                error: action.err.toString()
+            };
+
+        case "FAV_FETCH_REQUEST":
+            return {
+                ...state,
+                loading: true,
+                error: null
             };
 
         case "FAV_FETCH_SUCCESS":
@@ -68,7 +122,8 @@ const videoReducer = (state = initialState, action) => {
         case "FAV_FETCH_FAILED":
             return {
                 ...state,
-                error: action.err.toString()
+                error: action.err.toString(),
+                laoding: false
             };
 
         default:

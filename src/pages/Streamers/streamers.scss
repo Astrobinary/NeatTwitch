@@ -1,35 +1,40 @@
 .Streamers {
     text-align: center;
-    margin: auto 15px;
 }
 
 .streamer-loader {
     width: 100%;
-    margin: 0 auto;
+    position: absolute;
     transition: all 0.3s ease;
 }
 
 .streamer-container {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-top: 20px;
-    transition: all 0.3s ease;
-    overflow: hidden;
+    // display: flex;
+    // justify-content: space-around;
+    // width: 100%;
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    // padding-top: 20px;
+    // transition: all 0.3s ease;
+    // overflow: hidden;
 
-    &:after {
-        content: "";
-        flex: auto;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-gap: 10px;
+    grid-auto-flow: dense;
+    justify-items: center;
+    grid-row-gap: 20px;
+    overflow: hidden;
+    padding-top: 20px;
+    width: 100%;
+    margin-top: 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.4) 200%, black 100%);
+    transition: all 0.2s ease;
 }
 
 .streamer-item {
     display: flex;
     flex-direction: column;
-    padding: 0px 15px;
-    padding-bottom: 30px;
     transition: all 0.3s ease;
 
     img {

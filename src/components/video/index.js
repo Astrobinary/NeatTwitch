@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { connect } from "react-redux";
 
-import { favoriteVideo, fetchFavorite } from "../../redux/actions/videoActions";
+import { favoriteVideo, fetchFavorite, removeFavorite } from "../../redux/actions/videoActions";
 import "babel-polyfill";
 import moment from "moment";
 
@@ -46,12 +46,13 @@ class video extends Component {
     }
 
     addFav = () => {
-        console.log("here");
-        this.props.favoriteVideo(this.props.videoInfo.slug, this.props.videoInfo.thumbnails.medium, this.props.videoInfo.title, this.props.videoInfo.broadcaster.display_name);
+        if (this.props.auth.isEmpty) return;
+        this.props.favoriteVideo(this.props.videoInfo);
     };
 
     removeFav = () => {
-        console.log("remove it");
+        if (this.props.auth.isEmpty) return;
+        this.props.removeFavorite(this.props.videoInfo.slug);
     };
 
     isFav = () => {
@@ -63,10 +64,20 @@ class video extends Component {
             }
         }
 
-        return this.props.favorites.favs[this.props.videoInfo.slug] === undefined ? false : true;
+        if (this.props.favorites.favs[this.props.videoInfo.slug] !== undefined) {
+            if (this.props.favorites.favs[this.props.videoInfo.slug][0] === null) {
+                return <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />;
+            } else {
+                return <img onClick={this.removeFav} src={likeIcon} alt="like icon" title="like" />;
+            }
+        } else {
+            return <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />;
+        }
     };
 
     render() {
+        let favButton = this.isFav();
+
         return (
             <div ref={this.sizeRef} className="player-contain" style={{ backgroundImage: `url(${this.props.videoInfo.thumbnails.medium})` }}>
                 <iframe allowFullScreen src={this.props.videoInfo.embed_url} frameBorder="0" title={this.props.videoInfo.title} scrolling="no" height="100%" width="100%" />
@@ -95,7 +106,8 @@ class video extends Component {
                     </div>
                     <div className="player-info-right">
                         <div className="player-icons">
-                            {this.isFav() ? <img onClick={this.removeFav} src={likeIcon} alt="like icon" title="like" /> : <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />}
+                            {/* {this.isFav() ? <img onClick={this.removeFav} src={likeIcon} alt="like icon" title="like" /> : <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />} */}
+                            {favButton}
                             {/* <div className="like-icon">like</div> */}
 
                             <img src={shareIcon} alt="share icon" title="share" />
@@ -128,6 +140,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         favoriteVideo: (videoID, thumbnail, title, streamer) => dispatch(favoriteVideo(videoID, thumbnail, title, streamer)),
+        removeFavorite: videoID => dispatch(removeFavorite(videoID)),
         fetchFavorite: videoID => dispatch(fetchFavorite(videoID))
     };
 };

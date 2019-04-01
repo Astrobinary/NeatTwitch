@@ -1,13 +1,10 @@
-export const favoriteVideo = (videoID, thumbnail, title, streamer) => {
+export const favoriteVideo = videoInfo => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         const firebase = getFirebase().auth();
 
         let favorite = {
-            videoID,
-            thumbnail,
-            title,
-            streamer,
+            ...videoInfo,
             timestamp: Date.now()
         };
 
@@ -15,13 +12,33 @@ export const favoriteVideo = (videoID, thumbnail, title, streamer) => {
             .collection("users")
             .doc(firebase.currentUser.uid)
             .collection("favs")
-            .doc(videoID)
+            .doc(videoInfo.slug)
             .set({ ...favorite }, { merge: true })
             .then(() => {
                 dispatch({ type: "FAV_ADDED_SUCCESS", favorite, user: firebase.currentUser.displayName });
             })
             .catch(err => {
                 dispatch({ type: "FAV_ADDED_FAILED", err });
+            });
+    };
+};
+
+export const removeFavorite = videoID => {
+    return (dispatch, getState, { getFirebase, getFirestore }) => {
+        const firestore = getFirestore();
+        const firebase = getFirebase().auth();
+
+        firestore
+            .collection("users")
+            .doc(firebase.currentUser.uid)
+            .collection("favs")
+            .doc(videoID)
+            .delete()
+            .then(() => {
+                dispatch({ type: "FAV_REMOVE_SUCCESS", videoID });
+            })
+            .catch(err => {
+                dispatch({ type: "FAV_REMOVE_FAILED", err });
             });
     };
 };
@@ -45,19 +62,68 @@ export const fetchFavorite = videoID => {
                 if (doc.exists) {
                     fav = doc.data();
                 } else {
-                    return;
+                    fav = null;
                 }
 
-                dispatch({
+                return dispatch({
                     type: "FAV_FETCH_SUCCESS",
                     fav,
                     videoID
                 });
-                return fav;
             })
             .catch(err => {
                 console.log(err);
-                dispatch({ type: "FAV_FETCH_FAILED", err });
+                return dispatch({ type: "FAV_FETCH_FAILED", err });
+            });
+    };
+};
+
+export const fetchAllFavorites = (prevCursor = null) => {
+    return (dispatch, getState, { getFirebase, getFirestore }) => {
+        const firestore = getFirestore();
+        const firebase = getFirebase().auth();
+        let docRef;
+
+        if (prevCursor !== null) {
+            docRef = firestore
+                .collection("users")
+                .doc(firebase.currentUser.uid)
+                .collection("favs")
+                .orderBy("timestamp", "desc")
+                .startAfter(prevCursor)
+                .limit(10);
+        } else {
+            docRef = firestore
+                .collection("users")
+                .doc(firebase.currentUser.uid)
+                .collection("favs")
+                .orderBy("timestamp", "desc")
+                .limit(10);
+        }
+
+        docRef
+            .get()
+            .then(doc => {
+                let temp = [];
+
+                let lastVisible = doc.docs[doc.docs.length - 1];
+
+                doc.forEach(snap => {
+                    if (snap.exists) temp.push(snap.data());
+                });
+
+                if (doc.docs.length < 10) lastVisible = undefined;
+
+                let payload = {
+                    list: temp,
+                    cursor: lastVisible
+                };
+
+                return dispatch({ type: "FAV_ALL_SUCCESS", payload });
+            })
+            .catch(err => {
+                console.log(err);
+                return dispatch({ type: "FAV_ALL_FAILED", err });
             });
     };
 };

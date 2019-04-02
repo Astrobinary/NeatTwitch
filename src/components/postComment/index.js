@@ -33,9 +33,12 @@ class PostComment extends Component {
     }
 
     onRouteChanged = () => {
-        this.textInput.current.disabled = false;
-        this.textInput.current.style.opacity = "0.8";
-        this.setState({ message: "", canPost: true, postText: "post" });
+        if (this.textInput.current !== null) {
+            this.textInput.current.disabled = false;
+            this.textInput.current.style.opacity = "0.8";
+
+            this.setState({ message: "", canPost: true, postText: "post" });
+        }
     };
     handleChange = e => {
         e.preventDefault();
@@ -45,7 +48,6 @@ class PostComment extends Component {
     };
 
     parseText = text => {
-        this.setState({ canPost: false });
         const regex = /:(.+?):/gm;
         let matches = text.match(regex);
 
@@ -87,10 +89,8 @@ class PostComment extends Component {
             points: 0
         };
 
-        // message, videoID, msgID, index
-
         this.setState({ canPost: false, postText: "posted!", posted: true, post: { ...temp } });
-        this.props.createComment(temp.message, this.props.videoID, this.props.parent);
+        this.props.createComment(temp.message, this.props.videoID, this.props.parent, this.props.title);
     };
 
     render() {
@@ -123,7 +123,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createComment: (comment, id, parent, reply) => dispatch(createComment(comment, id, parent))
+        createComment: (comment, id, parent, title) => dispatch(createComment(comment, id, parent, title))
     };
 };
 

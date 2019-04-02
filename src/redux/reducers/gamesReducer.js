@@ -1,5 +1,5 @@
 import update from "immutability-helper";
-import { FETCH_GAMES_REQUEST, FETCH_GAMES_SUCCESS, FETCH_GAMES_FAILURE, FETCH_GAME_TOP_REQUEST, FETCH_GAME_TOP_SUCCESS, FETCH_GAME_TOP_FAILURE } from "../actions/videoActions";
+import { FETCH_GAMES_REQUEST, FETCH_GAMES_SUCCESS, FETCH_GAMES_FAILURE, FETCH_GAME_VIDEOS_REQUEST, FETCH_GAME_VIDEOS_SUCCESS, FETCH_GAME_VIDEOS_FAILURE, FETCH_MORE_GAME_VIDEOS_REQUEST, FETCH_MORE_GAME_VIDEOS_SUCCESS, FETCH_MORE_GAME_VIDEOS_FAILURE } from "../actions/gameActions";
 
 const initialState = {
     games: [],
@@ -30,13 +30,13 @@ const gamesReducer = (state = initialState, action) => {
                 error: action.payload
             };
 
-        case FETCH_GAME_TOP_REQUEST:
+        case FETCH_GAME_VIDEOS_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null
             };
-        case FETCH_GAME_TOP_SUCCESS:
+        case FETCH_GAME_VIDEOS_SUCCESS:
             let state2;
             let obj = action.payload;
 
@@ -52,12 +52,31 @@ const gamesReducer = (state = initialState, action) => {
                 loading: false,
                 ...obj
             };
-        case FETCH_GAME_TOP_FAILURE:
+        case FETCH_GAME_VIDEOS_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
                 ...action.user
+            };
+
+        case FETCH_MORE_GAME_VIDEOS_REQUEST:
+            return {
+                ...state,
+                error: null
+            };
+        case FETCH_MORE_GAME_VIDEOS_SUCCESS:
+            let clips = update(state, { [action.game]: { [action.time]: { $push: action.clips }, cursor: { $set: action.cursor } } });
+
+            return {
+                ...clips,
+                loading: false
+            };
+        case FETCH_MORE_GAME_VIDEOS_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
             };
 
         default:

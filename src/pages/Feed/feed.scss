@@ -6,12 +6,13 @@
 
 .feed-loader {
     width: 100%;
-    margin: 0 auto;
+    position: absolute;
 }
 
 .clips-container-feed {
     @extend .clips-container;
     margin-top: 10px;
+    overflow: hidden;
 }
 
 .top-bar-feed {

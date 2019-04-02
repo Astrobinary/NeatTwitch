@@ -150,7 +150,7 @@
         }
 
         textarea {
-            width: calc(100% + 8px);
+            width: calc(100% - 10px);
             height: 95px;
             background-color: rgba(0, 0, 0, 0.4);
             border: none;
@@ -174,10 +174,29 @@
 
 .comment-jump {
     width: 100%;
-    margin: 25px 0;
+    margin: 20px 0;
     border-bottom: 2px solid #0fa5a5;
     color: rgba(255, 255, 255, 0.6);
     text-align: left;
     letter-spacing: 2px;
     font-weight: 500;
+}
+
+.view-comments {
+    width: 100%;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: left;
+    letter-spacing: 2px;
+    font-weight: 400;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+    &:hover {
+        color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+    }
 }

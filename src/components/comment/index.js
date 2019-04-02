@@ -5,6 +5,8 @@ import "./comments.scss";
 import uuid from "uuid";
 import moment from "moment";
 
+import { Link } from "react-router-dom";
+
 import PostComment from "../postComment";
 
 import replyIcon from "../../images/reply.svg";
@@ -58,25 +60,27 @@ class Comment extends Component {
                     <img className="comment-avatar" src={this.props.avatar} alt="icon" />
                     <div className="comment-message">
                         <div className="comment-username" htmlFor="message">
-                            {this.props.author}
+                            <Link className="comment-username-text" to={`/user/${this.props.author}`}>
+                                {this.props.author}
+                            </Link>
                         </div>
                         <ReactMarkdown className="comment-output" source={this.props.message} disallowedTypes={["link", "heading", "thematicBreak", "linkReference", "table", "paragraph"]} unwrapDisallowed />
                         <div className="btn-contain com">
                             <div className="btn-by">{moment(this.props.timestamp).fromNow()}</div>
-                            {this.state.showReply ? null : (
+                            {this.state.showReply ? null : !this.props.auth.isEmpty ? (
                                 <div className="btn-post" onClick={this.toggleReply}>
                                     <div className="btn-icon">
                                         <img src={replyIcon} alt="reply" />
                                     </div>
                                     <div>reply</div>
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                     </div>
                 </div>
 
-                {this.state.showReply ? <PostComment {...this.props} placeHolder={`replying to ${this.props.author}...`} parent={this.props.messageID} count={this.state.count} reply={true} /> : null}
-                {this.props.children && this.props.children.map((item, index) => <Comment key={uuid.v4()} {...item} count={this.state.count} auth={this.props.auth} userVote={this.userVote} />)}
+                {this.state.showReply ? <PostComment {...this.props} placeHolder={`replying to ${this.props.author}...`} parent={this.props.messageID} count={this.state.count} reply={true} title={this.props.title} /> : null}
+                {this.props.children && this.props.children.map((item, index) => <Comment key={uuid.v4()} {...item} count={this.state.count} auth={this.props.auth} userVote={this.userVote} title={this.props.title} />)}
             </div>
         );
     }

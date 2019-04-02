@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+import { connect } from "react-redux";
+
+import { favoriteVideo, fetchFavorite, removeFavorite } from "../../redux/actions/videoActions";
 import "babel-polyfill";
 import moment from "moment";
 
@@ -8,6 +11,7 @@ import downloadIcon from "./download.svg";
 import shareIcon from "./share.svg";
 import vodIcon from "./vod.svg";
 import likeIcon from "./like.svg";
+import nolikeIcon from "./nolike.svg";
 import "./video.scss";
 
 class video extends Component {
@@ -41,7 +45,39 @@ class video extends Component {
         return url;
     }
 
+    addFav = () => {
+        if (this.props.auth.isEmpty) return;
+        this.props.favoriteVideo(this.props.videoInfo);
+    };
+
+    removeFav = () => {
+        if (this.props.auth.isEmpty) return;
+        this.props.removeFavorite(this.props.videoInfo.slug);
+    };
+
+    isFav = () => {
+        if (!this.props.auth.isEmpty) {
+            if (this.props.favorites.favs.length === 0) {
+                this.props.fetchFavorite(this.props.videoInfo.slug);
+            } else if (this.props.favorites.favs[this.props.videoInfo.slug] === undefined) {
+                this.props.fetchFavorite(this.props.videoInfo.slug);
+            }
+        }
+
+        if (this.props.favorites.favs[this.props.videoInfo.slug] !== undefined) {
+            if (this.props.favorites.favs[this.props.videoInfo.slug][0] === null) {
+                return <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />;
+            } else {
+                return <img onClick={this.removeFav} src={likeIcon} alt="like icon" title="like" />;
+            }
+        } else {
+            return <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />;
+        }
+    };
+
     render() {
+        let favButton = this.isFav();
+
         return (
             <div ref={this.sizeRef} className="player-contain" style={{ backgroundImage: `url(${this.props.videoInfo.thumbnails.medium})` }}>
                 <iframe allowFullScreen src={this.props.videoInfo.embed_url} frameBorder="0" title={this.props.videoInfo.title} scrolling="no" height="100%" width="100%" />
@@ -70,16 +106,21 @@ class video extends Component {
                     </div>
                     <div className="player-info-right">
                         <div className="player-icons">
-                            <img src={likeIcon} alt="like icon" title="like" />
+                            {/* {this.isFav() ? <img onClick={this.removeFav} src={likeIcon} alt="like icon" title="like" /> : <img onClick={this.addFav} src={nolikeIcon} alt="like icon" title="like" />} */}
+                            {favButton}
+                            {/* <div className="like-icon">like</div> */}
+
                             <img src={shareIcon} alt="share icon" title="share" />
+                            {/* <div className="share-icon">share</div> */}
                             {this.props.videoInfo.vod ? (
                                 <a href={this.props.videoInfo.vod.url} target="_blank" rel="noopener noreferrer">
                                     <img src={vodIcon} alt="vod icon" title="vod" />
+                                    {/* <div className="vod-icon">vod</div> */}
                                 </a>
                             ) : null}
-
                             <a href={this.getMp4()} download target="_blank" rel="noopener noreferrer">
                                 <img src={downloadIcon} alt="download icon" title="download" />
+                                {/* <div className="download-icon">get</div> */}
                             </a>
                         </div>
                     </div>
@@ -89,4 +130,22 @@ class video extends Component {
     }
 }
 
-export default video;
+const mapStateToProps = state => {
+    return {
+        favorites: state.videoReducer,
+        auth: state.firebaseReducer.auth
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        favoriteVideo: (videoID, thumbnail, title, streamer) => dispatch(favoriteVideo(videoID, thumbnail, title, streamer)),
+        removeFavorite: videoID => dispatch(removeFavorite(videoID)),
+        fetchFavorite: videoID => dispatch(fetchFavorite(videoID))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(video);

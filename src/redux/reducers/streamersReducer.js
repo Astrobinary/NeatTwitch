@@ -1,9 +1,8 @@
 import update from "immutability-helper";
 
-import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE } from "../actions/videoActions";
+import { FETCH_STREAMERS_REQUEST, FETCH_STREAMERS_SUCCESS, FETCH_STREAMERS_FAILURE, FETCH_CHANNEL_TOP_REQUEST, FETCH_CHANNEL_TOP_SUCCESS, FETCH_CHANNEL_TOP_SEMI_SUCCESS, FETCH_CHANNEL_TOP_FAILURE, FETCH_MORE_STREAMER_VIDEOS_REQUEST, FETCH_MORE_STREAMER_VIDEOS_SUCCESS, FETCH_MORE_STREAMER_VIDEOS_FAILURE, FETCH_FOLLOWED_STREAMERS_REQUEST, FETCH_FOLLOWED_STREAMERS_SUCCESS, FETCH_FOLLOWED_STREAMERS_FAILURE, FETCH_MORE_FOLLOWED_STREAMERS_REQUEST, FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS, FETCH_MORE_FOLLOWED_STREAMERS_FAILURE } from "../actions/streamerActions";
 
 const initialState = {
-    _twitch: [],
     loading: false,
     error: null,
     offset: 0
@@ -18,13 +17,68 @@ const streamersReducer = (state = initialState, action) => {
                 error: null
             };
         case FETCH_STREAMERS_SUCCESS:
+            let streamers;
+
+            if (state.twitch === undefined) {
+                streamers = update(state, { twitch: { $set: action.payload } });
+            } else {
+                streamers = update(state, { twitch: { $push: action.payload } });
+            }
+
             return {
-                ...state,
+                ...streamers,
                 loading: false,
-                _twitch: [...state._twitch, ...action.payload],
                 offset: action.offset
             };
         case FETCH_STREAMERS_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
+
+        case FETCH_FOLLOWED_STREAMERS_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                error: null
+            };
+        case FETCH_FOLLOWED_STREAMERS_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                followed: [...action.payload],
+                followTotal: action.total
+            };
+        case FETCH_FOLLOWED_STREAMERS_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
+
+        case FETCH_MORE_FOLLOWED_STREAMERS_REQUEST:
+            return {
+                ...state,
+                error: null
+            };
+        case FETCH_MORE_FOLLOWED_STREAMERS_SUCCESS:
+            let followedStreamers;
+
+            console.log(action);
+
+            if (state.followed === undefined) {
+                followedStreamers = update(state, { followed: { $set: action.payload } });
+            } else {
+                followedStreamers = update(state, { followed: { $push: action.payload } });
+            }
+
+            return {
+                ...state,
+                ...followedStreamers,
+                loading: false
+            };
+        case FETCH_MORE_FOLLOWED_STREAMERS_FAILURE:
             return {
                 ...state,
                 loading: false,
@@ -75,6 +129,25 @@ const streamersReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 error: action.error
+            };
+
+        case FETCH_MORE_STREAMER_VIDEOS_REQUEST:
+            return {
+                ...state,
+                error: null
+            };
+        case FETCH_MORE_STREAMER_VIDEOS_SUCCESS:
+            let clips = update(state, { [action.streamer]: { [action.time]: { $push: action.clips }, cursor: { $set: action.cursor } } });
+
+            return {
+                ...clips,
+                loading: false
+            };
+        case FETCH_MORE_STREAMER_VIDEOS_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
             };
 
         default:

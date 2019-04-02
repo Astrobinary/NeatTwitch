@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchStreamVideos, fetchGameVideos } from "../../redux/actions/videoActions";
-
+import { fetchStreamVideos, fetchMoreStreamerVideos } from "../../redux/actions/streamerActions";
+import { fetchGameVideos, fetchMoreGameVideos } from "../../redux/actions/gameActions";
+import LazyLoad from "react-lazyload";
 import { uid } from "react-uid";
 import SimpleStorage from "react-simple-storage";
-
+import Waypoint from "react-waypoint";
 import Info from "../clipsInfo";
 import PreviewItem from "../previewItem";
+import ToTop from "../toTop";
 
 import optionIcon from "../../images/sort.svg";
 import Loading from "../loading";
@@ -31,16 +33,26 @@ class previewContainer extends Component {
         let backURL = split.splice(1, split.length - 2);
         backURL = backURL.join("/");
 
+        let items = ["day", "week", "month", "all"];
+
+        if (items.length === 4) {
+            items = items.filter(item => {
+                return item !== current;
+            });
+        }
+
         this.state = {
             showMenu: false,
             currentClipSelection: current,
+            clipSort: items,
             back,
             backURL,
-            name
+            name,
+            mod: 0
         };
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.props.match.params.streamerID) {
             if (this.props.videos === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, this.state.currentClipSelection);
         }
@@ -55,7 +67,11 @@ class previewContainer extends Component {
     };
 
     updateMenu = time => {
-        this.setState({ showMenu: false, currentClipSelection: time });
+        let normalize = ["day", "week", "month", "all"];
+
+        let items = normalize.filter(item => {
+            return item !== time;
+        });
 
         if (this.props.match.params.streamerID) {
             if (this.props.videos[time] === undefined) this.props.fetchStreamVideos(this.props.match.params.streamerID, time);
@@ -64,6 +80,7 @@ class previewContainer extends Component {
         if (this.props.match.params.gameID) {
             if (this.props.videos[time] === undefined) this.props.fetchGameVideos(this.props.match.params.gameID, time, "game");
         }
+        this.setState({ showMenu: false, currentClipSelection: time, clipSort: items });
     };
 
     getClips = () => {
@@ -73,8 +90,35 @@ class previewContainer extends Component {
 
         return this.props.videos[this.state.currentClipSelection].map((x, index, arr) => (
             <Link key={uid(x)} to={{ pathname: `${this.props.match.url}/${x.slug}`, state: { videos: arr, current: index, next: index + 1, prev: index - 1 } }}>
-                <PreviewItem video={x} />
+                <LazyLoad height={174} offset={800} once>
+                    <PreviewItem video={x} />
+                </LazyLoad>
+                {index === Math.round(this.props.videos[this.state.currentClipSelection].length / 1.25) ? <Waypoint onEnter={this.getMoreVideos} /> : null}
             </Link>
+        ));
+    };
+    getMoreVideos = () => {
+        if (this.props.match.params.gameID) if (this.props.videos.cursor) this.props.fetchMoreGameVideos(this.props.match.params.gameID, this.state.currentClipSelection, this.props.videos.cursor);
+        if (this.props.match.params.streamerID) if (this.props.videos.cursor) this.props.fetchMoreStreamerVideos(this.props.match.params.streamerID, this.state.currentClipSelection, this.props.videos.cursor);
+    };
+
+    renderExtra = () => {
+        let elements = [];
+        let amount = 0;
+        if (this.props.videos !== undefined) if (this.props.videos[this.state.currentClipSelection] !== undefined) amount = this.props.videos[this.state.currentClipSelection].length % 6;
+
+        for (let index = 0; index < amount + 2; index++) {
+            elements.push(<div key={uid(index)} style={{ width: "300px" }} />);
+        }
+
+        return elements;
+    };
+
+    renderMenu = () => {
+        return this.state.clipSort.map((sort, index) => (
+            <div key={uid(index)} onClick={() => this.updateMenu(sort)}>
+                {sort}
+            </div>
         ));
     };
 
@@ -97,10 +141,13 @@ class previewContainer extends Component {
             clips = <div>{this.props.error}</div>;
         }
 
+        const menu = this.renderMenu();
+        let extra = this.renderExtra();
+
         return (
             <section>
-                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name"]} />
-
+                <SimpleStorage parent={this} blacklist={["showMenu", "back", "backURL", "name", "mod", "clipSort"]} />
+                <ToTop />
                 <Info streamer={this.props.videos} type={this.props.match.params} />
                 <div className="top-bar">
                     <div className="sorting">
@@ -109,17 +156,17 @@ class previewContainer extends Component {
                         <span className="sort-choice" onClick={this.toggleMenu}>
                             {this.state.currentClipSelection}
                         </span>
-                        {this.state.showMenu ? (
-                            <div className="sort-menu">
-                                <div onClick={() => this.updateMenu("day")}>Day</div>
-                                <div onClick={() => this.updateMenu("week")}>Week</div>
-                                <div onClick={() => this.updateMenu("month")}>Month</div>
-                                <div onClick={() => this.updateMenu("all")}>All</div>
-                            </div>
-                        ) : null}
+                        {this.state.showMenu ? <div className="sort-menu">{menu}</div> : null}
                     </div>
                 </div>
-                {this.props.loading ? loadGif : <section className="clips-container">{clips}</section>}
+                {this.props.loading ? (
+                    loadGif
+                ) : (
+                    <section className="clips-container">
+                        {clips}
+                        {extra}
+                    </section>
+                )}
             </section>
         );
     }
@@ -141,7 +188,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchStreamVideos: (id, time) => dispatch(fetchStreamVideos(id, time)),
-        fetchGameVideos: (id, time) => dispatch(fetchGameVideos(id, time))
+        fetchGameVideos: (id, time) => dispatch(fetchGameVideos(id, time)),
+        fetchMoreGameVideos: (id, time, cursor) => dispatch(fetchMoreGameVideos(id, time, cursor)),
+        fetchMoreStreamerVideos: (id, time, cursor) => dispatch(fetchMoreStreamerVideos(id, time, cursor))
     };
 };
 

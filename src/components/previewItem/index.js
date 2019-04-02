@@ -28,6 +28,7 @@ class previewItem extends Component {
             <div className="preview-item" onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
                 <div className="preview-top-banner">
                     <img className="preview-logo-corner" src={this.props.video.broadcaster.logo} alt="logo" />
+
                     <div className="preview-view-container">
                         <div className="preview-view-count">{this.props.video.views.toLocaleString()}</div>
                         <div className="preview-view-count">{this.props.video.broadcaster.name}</div>

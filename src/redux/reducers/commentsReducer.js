@@ -1,5 +1,4 @@
 import update from "immutability-helper";
-const arrayToTree = require("array-to-tree");
 
 const initialState = { loading: false, error: null };
 
@@ -20,20 +19,28 @@ const commentsReducer = (state = initialState, action) => {
         case "CREATE_REPLY_FAILED":
             return state;
         case "GET_COMMENT_SUCCESS":
-            let state2;
-            let obj = action.comments;
+            let newState;
 
             if (state[action.videoID] === undefined) {
-                state2 = update(state[action.videoID], { $set: action.comments });
+                newState = update(state, { $set: { [action.videoID]: action.payload } });
             } else {
-                state2 = update(state[action.videoID], { $merge: action.comments[action.videoID] });
-                obj[action.videoID] = state2;
+                newState = update(state, {
+                    [action.videoID]: {
+                        list: {
+                            $push: action.payload.list
+                        },
+
+                        cursor: {
+                            $set: action.payload.cursor
+                        }
+                    }
+                });
             }
 
             return {
                 ...state,
-                loading: false,
-                ...obj
+                ...newState,
+                loading: false
             };
         case "GET_COMMENT_FAILED":
             return {
@@ -44,7 +51,7 @@ const commentsReducer = (state = initialState, action) => {
 
         case "VOTE_SUCCESS":
             let index;
-            let temp = state[action.payload.videoID];
+            let temp = state[action.payload.videoID].list;
 
             temp.forEach((element, ind) => {
                 if (element.messageID === action.payload.messageID) {

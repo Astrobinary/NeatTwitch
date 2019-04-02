@@ -56,9 +56,11 @@ iframe {
 
 .player-link {
     display: inline-block;
+    transition: all 0.3s ease;
     &:hover {
         cursor: pointer;
-        color: #ed4f74;
+        // color: #ed4f74;
+        border-bottom: 1px solid #ed4f74;
     }
 }
 
@@ -87,10 +89,52 @@ iframe {
 
 .player-icons {
     text-align: center;
+
+    .like-icon {
+        position: absolute;
+        font-size: 10px;
+        opacity: 0.3;
+        letter-spacing: 2px;
+        margin-left: 16px;
+        margin-top: -11px;
+        font-weight: 200;
+    }
+
+    .share-icon {
+        position: absolute;
+        font-size: 10px;
+        opacity: 0.3;
+        letter-spacing: 2px;
+        margin-left: 50px;
+        margin-top: -11px;
+        font-weight: 200;
+    }
+
+    .vod-icon {
+        position: absolute;
+        font-size: 10px;
+        opacity: 0.3;
+        letter-spacing: 2px;
+        margin-left: 93px;
+        margin-top: -11px;
+        font-weight: 200;
+    }
+
+    .download-icon {
+        position: absolute;
+        font-size: 10px;
+        opacity: 0.3;
+        letter-spacing: 2px;
+        margin-left: 135px;
+        margin-top: -11px;
+        font-weight: 200;
+    }
+
     img {
         width: 20px;
         padding: 10px 10px;
         opacity: 0.5;
+        transition: all 0.3s ease;
         &:hover {
             opacity: 1;
             cursor: pointer;

@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { Link, NavLink, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-
+import moment from "moment";
 import firebase from "firebase/app";
 import Axios from "axios";
-
+import Cookies from "universal-cookie";
 import searchIcon from "../../images/search.svg";
 import loginIcon from "../../images/login.svg";
-import logoutIcon from "../../images/logout.svg";
+import menuIcon from "../../images/menu.svg";
 import "./nav_new.scss";
 require("firebase/functions");
+
+const cookies = new Cookies();
 
 class navagation extends Component {
     constructor(props) {
@@ -17,11 +19,25 @@ class navagation extends Component {
 
         this.state = {
             showMenu: false,
+            showUserMenu: false,
             loginText: "Login"
         };
     }
 
     AuthenticateWithTwitch = async () => {
+        // if (cookies.get(`twitch-saved-token`) !== undefined) {
+        //     let token = cookies.get("twitch-saved-token");
+        //     firebase
+        //         .auth()
+        //         .signInWithCustomToken(token)
+        //         .catch(err => {
+        //             cookies.remove("twitch-saved-token");
+        //             return this.AuthenticateWithTwitch();
+        //         });
+
+        //     return;
+        // }
+
         let redirectUri;
         if (process.env.NODE_ENV === "production" ? (redirectUri = "https://neattwitch.com/feed") : (redirectUri = "http://localhost:3000/feed"));
         const clientId = "15c6l9641yo97kt42nnsa51vrwp70y";
@@ -58,6 +74,13 @@ class navagation extends Component {
         if (process.env.NODE_ENV === "production") {
             Axios.get("https://us-central1-liveclips-2b478.cloudfunctions.net/" + uri)
                 .then(response => {
+                    cookies.set("twitch-saved-token", response.data, {
+                        expires: moment()
+                            .add(60, "days")
+                            .toDate(),
+                        secure: true,
+                        sameSite: "strict"
+                    });
                     firebase.auth().signInWithCustomToken(response.data);
                 })
                 .catch(error => {
@@ -66,6 +89,12 @@ class navagation extends Component {
         } else {
             Axios.get("http://localhost:5000/liveclips-2b478/us-central1/" + uri)
                 .then(response => {
+                    cookies.set("twitch-saved-token", response.data, {
+                        expires: moment()
+                            .add(60, "days")
+                            .toDate(),
+                        sameSite: "strict"
+                    });
                     firebase.auth().signInWithCustomToken(response.data);
                 })
                 .catch(error => {
@@ -76,6 +105,10 @@ class navagation extends Component {
 
     toggleMenu = () => {
         this.setState({ showMenu: !this.state.showMenu });
+    };
+
+    toggleUserMenu = () => {
+        this.setState({ showUserMenu: !this.state.showUserMenu });
     };
 
     logOut = () => {
@@ -113,18 +146,40 @@ class navagation extends Component {
                         <input />
                     </div>
 
-                    {auth.isEmpty ? (
+                    {!auth.isLoaded ? (
+                        <div className="nav-login">
+                            <img src={loginIcon} alt={"login"} />
+                            <span>loading...</span>
+                        </div>
+                    ) : auth.isEmpty ? (
                         <div className="nav-login" onClick={this.AuthenticateWithTwitch}>
                             <img src={loginIcon} alt={"login"} />
                             <span>{this.state.loginText}</span>
                         </div>
                     ) : (
-                        <div className="full nav-item" onClick={this.logOut} title="Logout">
+                        <div className="full nav-item" onClick={this.toggleUserMenu}>
                             <div>
                                 <img className="nav-avatar" alt="avatar" src={auth.photoURL} />
                                 <div className="nav-name">{auth.displayName}</div>
-                                <img className="nav-logout" src={logoutIcon} alt={"login"} />
+                                <img className="nav-logout" src={menuIcon} alt={"menu"} />
                             </div>
+
+                            {this.state.showUserMenu ? (
+                                <div className="user-menu-contain" onMouseLeave={this.toggleUserMenu}>
+                                    <Link to={`/user/${this.props.auth.displayName}`}>
+                                        <div className="user-menu-item">profile</div>
+                                    </Link>
+                                    <Link to={`/user/${this.props.auth.displayName}/favorites`}>
+                                        {" "}
+                                        <div className="user-menu-item">favorites</div>{" "}
+                                    </Link>
+                                    <div className="user-menu-item">playlists</div>
+                                    <div className="user-menu-item">settings</div>
+                                    <div className="user-menu-item" onClick={this.logOut}>
+                                        logout
+                                    </div>
+                                </div>
+                            ) : null}
                         </div>
                     )}
                 </nav>
@@ -163,7 +218,8 @@ class navagation extends Component {
 
 const mapStateToProps = state => {
     return {
-        auth: state.firebaseReducer.auth
+        auth: state.firebaseReducer.auth,
+        init: state.firebaseReducer.isInitializing
     };
 };
 

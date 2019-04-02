@@ -183,6 +183,7 @@ export function fetchFollowedStreamers(id) {
         return axios
             .get(`${api}/users/${id}/follows/channels?sortby=last_broadcast&limit=100`, options)
             .then(res => {
+                console.log(id);
                 dispatch(fetchFollwedStreamersSucess(res.data.follows, res.data._total));
                 return res.data.top;
             })

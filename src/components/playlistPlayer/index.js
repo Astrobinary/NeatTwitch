@@ -24,12 +24,10 @@ class playlistPlayer extends Component {
         }
 
         let split = this.props.location.pathname.split("/");
-        split = split.splice(1, split.length);
+        split = split.splice(1, split.length - 2);
 
-        let back = split[split.length - 2];
-
-        let backURL = split.splice(2, split.length);
-        backURL = split.join("/");
+        let back = split[split.length - 1];
+        let backURL = split.join("/");
 
         if (backURL.includes("feed")) backURL = back;
 

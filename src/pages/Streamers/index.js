@@ -42,7 +42,7 @@ class Streamers extends Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.auth.isEmpty !== this.props.auth.isEmpty) {
-            if (this.props.reducer.followed === undefined && this.state.currentStreamerSelection === "followed") this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7));
+            if (this.props.reducer.followed === undefined && this.state.currentStreamerSelection === "followed") this.props.fetchFollowedStreamers(this.props.auth.uid);
         }
     }
     onRouteChanged = () => {
@@ -52,7 +52,7 @@ class Streamers extends Component {
     componentDidMount() {
         // if (this.state.currentStreamerSelection === "followed" && this.props.auth.isEmpty) this.setState({ currentStreamerSelection: "twitch", showMenu: false });
         if (this.props.reducer.twitch === undefined && this.state.currentStreamerSelection === "twitch") this.props.fetch();
-        if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7));
+        if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid);
     }
 
     toggleMenu = () => {
@@ -60,7 +60,7 @@ class Streamers extends Component {
     };
 
     updateMenu = sort => {
-        if (sort === "followed") if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid.substr(7));
+        if (sort === "followed") if (this.props.reducer.followed === undefined && !this.props.auth.isEmpty) this.props.fetchFollowedStreamers(this.props.auth.uid);
         if (sort === "twitch") if (this.props.reducer.twitch === undefined) this.props.fetch();
 
         let normalize = ["twitch", "followed"];

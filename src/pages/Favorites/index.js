@@ -12,15 +12,12 @@ class Favorites extends Component {
     componentDidMount() {
         if (!this.props.auth.isEmpty && this.props.favorites.length === 0) this.props.fetchAllFavorites();
     }
+
     componentWillReceiveProps(prev, next) {
-        console.log(prev);
         if (!prev.auth.isEmpty && prev.favorites.length === 0) prev.fetchAllFavorites();
     }
 
     getClips = () => {
-        if (this.props.favorites.length === 0 && !this.props.auth.isEmpty) {
-            this.props.fetchAllFavorites();
-        }
         const clip = this.props.favorites;
 
         let clips = clip.map((x, index, arr) => (
@@ -50,7 +47,7 @@ class Favorites extends Component {
 
         return (
             <section className="clips-container-feed">
-                {this.props.favorites.length === 0 ? loadGif : clips}
+                {this.props.auth.isEmpty ? loadGif : clips}
                 {/* <div style={{ width: "100%" }}>{this.props.loading ? null : <Waypoint onEnter={this.getMoreVideos} />}</div> */}
             </section>
         );
@@ -60,7 +57,8 @@ class Favorites extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         favorites: state.videoReducer.myFavs,
-        auth: state.firebaseReducer.auth
+        auth: state.firebaseReducer.auth,
+        fav: state.videoReducer.favs
     };
 };
 

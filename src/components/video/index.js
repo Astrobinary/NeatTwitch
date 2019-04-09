@@ -47,7 +47,7 @@ class video extends Component {
 
     addFav = () => {
         if (this.props.auth.isEmpty) return;
-        this.props.favoriteVideo(this.props.videoInfo);
+        this.props.favoriteVideo(this.props.videoInfo, this.props.auth.uid, this.props.auth.display_name);
     };
 
     removeFav = () => {
@@ -58,9 +58,9 @@ class video extends Component {
     isFav = () => {
         if (!this.props.auth.isEmpty) {
             if (this.props.favorites.favs.length === 0) {
-                this.props.fetchFavorite(this.props.videoInfo.slug);
+                this.props.fetchFavorite(this.props.videoInfo.slug, this.props.auth.uid);
             } else if (this.props.favorites.favs[this.props.videoInfo.slug] === undefined) {
-                this.props.fetchFavorite(this.props.videoInfo.slug);
+                this.props.fetchFavorite(this.props.videoInfo.slug, this.props.auth.uid);
             }
         }
 
@@ -140,8 +140,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         favoriteVideo: (videoID, thumbnail, title, streamer) => dispatch(favoriteVideo(videoID, thumbnail, title, streamer)),
-        removeFavorite: videoID => dispatch(removeFavorite(videoID)),
-        fetchFavorite: videoID => dispatch(fetchFavorite(videoID))
+        removeFavorite: (videoID, userID) => dispatch(removeFavorite(videoID, userID)),
+        fetchFavorite: (videoID, userID) => dispatch(fetchFavorite(videoID, userID))
     };
 };
 

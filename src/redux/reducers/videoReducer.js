@@ -1,6 +1,6 @@
 import update from "immutability-helper";
 
-const initialState = { loading: false, error: null, favs: [], myFavs: [] };
+const initialState = { fetchedAll: false, loading: false, error: null, favs: [], myFavs: [] };
 
 const videoReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -13,6 +13,9 @@ const videoReducer = (state = initialState, action) => {
                         $set: {
                             [action.favorite.slug]: [action.favorite]
                         }
+                    },
+                    myFavs: {
+                        $push: [action.favorite]
                     }
                 });
             } else {
@@ -21,6 +24,9 @@ const videoReducer = (state = initialState, action) => {
                         [action.favorite.slug]: {
                             $set: [action.favorite]
                         }
+                    },
+                    myFavs: {
+                        $unshift: [action.favorite]
                     }
                 });
             }
@@ -40,16 +46,18 @@ const videoReducer = (state = initialState, action) => {
         case "FAV_ALL_SUCCESS":
             let newFavs;
 
-            if (state.myFavs.length === 0) {
-                newFavs = update(state, {
-                    myFavs: {
-                        $set: action.payload.list
-                    },
-                    favCursor: {
-                        $set: action.payload.cursor
-                    }
-                });
-            }
+            newFavs = update(state, {
+                myFavs: {
+                    $set: action.payload.list
+                },
+                favCursor: {
+                    $set: action.payload.cursor
+                },
+                fetchedAll: {
+                    $set: true
+                }
+            });
+
             return {
                 ...state,
                 ...newFavs,

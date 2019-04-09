@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { fetchAllFavorites } from "../../redux/actions/videoActions";
 import LazyLoad from "react-lazyload";
 import { uid } from "react-uid";
@@ -10,11 +11,15 @@ import "./favorites.scss";
 
 class Favorites extends Component {
     componentDidMount() {
-        if (!this.props.auth.isEmpty && this.props.favorites.length === 0) this.props.fetchAllFavorites();
+        if (!this.props.auth.isEmpty) {
+            if (!this.props.hasFetched) this.props.fetchAllFavorites();
+        }
     }
 
     componentWillReceiveProps(prev, next) {
-        if (!prev.auth.isEmpty && prev.favorites.length === 0) prev.fetchAllFavorites();
+        if (!prev.auth.isEmpty && prev.favorites.length === 0) {
+            prev.fetchAllFavorites();
+        }
     }
 
     getClips = () => {
@@ -57,6 +62,7 @@ class Favorites extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         favorites: state.videoReducer.myFavs,
+        hasFetched: state.videoReducer.fetchedAll,
         auth: state.firebaseReducer.auth,
         fav: state.videoReducer.favs
     };

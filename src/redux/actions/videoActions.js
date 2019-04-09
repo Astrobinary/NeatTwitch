@@ -1,7 +1,6 @@
-export const favoriteVideo = videoInfo => {
+export const favoriteVideo = (videoInfo, userID, displayName) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
-        const firebase = getFirebase().auth();
 
         let favorite = {
             ...videoInfo,
@@ -10,12 +9,12 @@ export const favoriteVideo = videoInfo => {
 
         firestore
             .collection("users")
-            .doc(firebase.currentUser.uid)
+            .doc(userID)
             .collection("favs")
             .doc(videoInfo.slug)
             .set({ ...favorite }, { merge: true })
             .then(() => {
-                dispatch({ type: "FAV_ADDED_SUCCESS", favorite, user: firebase.currentUser.displayName });
+                dispatch({ type: "FAV_ADDED_SUCCESS", favorite, user: displayName });
             })
             .catch(err => {
                 dispatch({ type: "FAV_ADDED_FAILED", err });
@@ -43,17 +42,17 @@ export const removeFavorite = videoID => {
     };
 };
 
-export const fetchFavorite = videoID => {
+export const fetchFavorite = (videoID, userID) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
-        const firebase = getFirebase().auth();
         let docRef;
 
         docRef = firestore
             .collection("users")
-            .doc(firebase.currentUser.uid)
+            .doc(userID)
             .collection("favs")
             .doc(videoID);
+        console.log("here");
 
         docRef
             .get()

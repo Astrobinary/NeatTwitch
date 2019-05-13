@@ -11,13 +11,15 @@ const commentsReducer = (state = initialState, action) => {
                 error: null
             };
         case "GET_USER_COMMENTS_SUCCESS":
-            let comments;
+            let profile;
 
-            if (state[action.user] === undefined) comments = update(state[action.user], { $set: action.comments });
+            console.log(action)
+
+            if (state[action.user] === undefined) profile = update(state[action.user], { $set: action.profile });
 
             return {
                 ...state,
-                ...comments,
+                ...profile,
                 loading: false
             };
         case "GET_USER_COMMENTS_FAILED":

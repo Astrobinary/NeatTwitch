@@ -12,23 +12,25 @@ export const fetchUserComments = displayName => {
         docRef
             .get()
             .then(doc => {
-                let comments = {};
+                let profile = {};
                 let temp = [];
+                let latest = {};
 
                 doc.forEach(snap => {
                     if (snap.exists) temp.push(snap.data());
                 });
 
-                comments[displayName] = temp;
+                 latest["comments"] = temp
+                profile[displayName] = latest;
 
                 if (temp.length === 0) throw new Error("No comments found");
 
                 dispatch({
                     type: "GET_USER_COMMENTS_SUCCESS",
-                    comments,
+                    profile,
                     user: displayName
                 });
-                return comments;
+                return profile;
             })
             .catch(err => {
                 console.log(err);

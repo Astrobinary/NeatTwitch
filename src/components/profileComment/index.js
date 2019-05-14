@@ -5,14 +5,6 @@ import "./profilecomment.scss";
 import uuid from "uuid";
 import moment from "moment";
 
-import { Link } from "react-router-dom";
-
-import PostComment from "../postComment";
-
-import replyIcon from "../../images/reply.svg";
-import up from "../../images/up.svg";
-import down from "../../images/down.svg";
-
 const ReactMarkdown = require("react-markdown");
 
 class Comment extends Component {
@@ -45,13 +37,12 @@ class Comment extends Component {
     render() {
         return (
             <div key={uuid.v4()}>
-                    <div className="profile-comment-message">
-                        <ReactMarkdown className="profile-comment-output" source={this.props.message} disallowedTypes={["link", "heading", "thematicBreak", "linkReference", "table", "paragraph"]} unwrapDisallowed />
-                        <div className="btn-contain com">
-                            <div className="btn-by">{moment(this.props.timestamp).fromNow()}</div>
-                        </div>
+                <div className="profile-comment-message">
+                    <ReactMarkdown className="profile-comment-output" source={this.props.message} disallowedTypes={["link", "heading", "thematicBreak", "linkReference", "table", "paragraph"]} unwrapDisallowed />
+                    <div className="btn-contain com">
+                        <div className="btn-by">{moment(this.props.timestamp).fromNow()}</div>
                     </div>
-                
+                </div>
             </div>
         );
     }

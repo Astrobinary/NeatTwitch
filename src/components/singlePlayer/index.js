@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchSingleVideo } from "../../redux/actions/feedActions";
+import { withRouter } from "react-router";
 
 import "babel-polyfill";
 import Video from "../video";
@@ -13,12 +14,13 @@ import CommentsContainer from "../commentsContainer";
 import "./singlePlayer.scss";
 
 class singlePlayer extends Component {
-    componentWillMount() {
+    componentDidMount() {
         this.props.fetchSingleVideo(this.props.match.params.videoID);
     }
 
     render() {
         let video;
+        console.log("RENDERING!");
 
         if (this.props.video !== undefined) {
             video = <Video videoInfo={this.props.video} />;
@@ -51,7 +53,14 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(singlePlayer);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(singlePlayer)
+);
+
+//  connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+// )(singlePlayer);

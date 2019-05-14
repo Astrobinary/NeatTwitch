@@ -11,20 +11,43 @@ const commentsReducer = (state = initialState, action) => {
                 error: null
             };
         case "GET_USER_COMMENTS_SUCCESS":
-            let profile;
+            let comments;
 
-            console.log(action)
-
-            if (state[action.user] === undefined) profile = update(state[action.user], { $set: action.profile });
+            comments = update(state, { [action.user]: { $merge: action.latest } });
 
             return {
                 ...state,
-                ...profile,
+                ...comments,
                 loading: false
             };
         case "GET_USER_COMMENTS_FAILED":
             return {
                 ...state,
+                error: action.err.toString()
+            };
+
+        case "GET_USER_PROFILE_REQUEST":
+            return {
+                ...state,
+                loading: true,
+                error: null
+            };
+        case "GET_USER_PROFILE_SUCCESS":
+            let details;
+
+            console.log(action.data.name);
+
+            if (state[action.data.name] === undefined) details = update(state[action.data.name], { $set: action.data });
+
+            return {
+                ...state,
+                ...details,
+                loading: false
+            };
+        case "GET_USER_PROFILE_FAILED":
+            return {
+                ...state,
+                loading: false,
                 error: action.err.toString()
             };
 

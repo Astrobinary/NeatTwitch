@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { uid } from "react-uid";
 import { fetchFeedVideos, fetchMoreFeedVideos } from "../../redux/actions/feedActions";
 import SimpleStorage from "react-simple-storage";
@@ -155,7 +155,9 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Feed);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(Feed)
+);

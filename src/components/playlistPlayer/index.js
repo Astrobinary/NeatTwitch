@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import Img from "react-image";
 import "babel-polyfill";
 import { uid } from "react-uid";
@@ -89,4 +89,4 @@ class playlistPlayer extends Component {
     }
 }
 
-export default playlistPlayer;
+export default withRouter(playlistPlayer);

@@ -59,7 +59,7 @@ export function fetchFeedVideos(time) {
     return dispatch => {
         dispatch(fetchFeedBegin());
         return axios
-            .get(`${api}/clips/top?limit=100&period=${time}`, options)
+            .get(`${api}/clips/top?limit=100&period=${time}&language=en`, options)
             .then(res => {
                 let sort = {};
                 sort[time] = res.data.clips;
@@ -99,7 +99,7 @@ export function fetchMoreFeedVideos(time, cursor) {
     return dispatch => {
         dispatch(fetchMoreFeedBegin());
         return axios
-            .get(`${api}/clips/top?limit=100&period=${time}&cursor=${cursor}`, options)
+            .get(`${api}/clips/top?limit=100&period=${time}&language=en&cursor=${cursor}`, options)
             .then(res => {
                 let clips = res.data.clips;
                 let newCursor = res.data._cursor;

@@ -20,7 +20,7 @@ class singlePlayer extends Component {
 
     render() {
         let video;
-        console.log("RENDERING!");
+        console.log(this.props);
 
         if (this.props.video !== undefined) {
             video = <Video videoInfo={this.props.video} />;

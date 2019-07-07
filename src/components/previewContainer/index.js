@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { fetchStreamVideos, fetchMoreStreamerVideos } from "../../redux/actions/streamerActions";
 import { fetchGameVideos, fetchMoreGameVideos } from "../../redux/actions/gameActions";
 import LazyLoad from "react-lazyload";
@@ -194,7 +194,9 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(previewContainer);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(previewContainer)
+);

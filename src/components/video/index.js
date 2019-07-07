@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import { connect } from "react-redux";
 
 import { favoriteVideo, fetchFavorite, removeFavorite } from "../../redux/actions/videoActions";
 import "babel-polyfill";
 import moment from "moment";
+
+import FilePlayer from "react-player/lib/players/FilePlayer";
 
 import downloadIcon from "./download.svg";
 import shareIcon from "./share.svg";
@@ -80,7 +82,23 @@ class video extends Component {
 
         return (
             <div ref={this.sizeRef} className="player-contain" style={{ backgroundImage: `url(${this.props.videoInfo.thumbnails.medium})` }}>
-                <iframe allowFullScreen src={this.props.videoInfo.embed_url} frameBorder="0" title={this.props.videoInfo.title} scrolling="no" height="100%" width="100%" />
+                <FilePlayer
+                    url={this.getMp4()}
+                    playing
+                    height="100%"
+                    width="100%"
+                    controls
+                    onError={() => {
+                        console.log("video error...");
+                    }}
+                    onBuffer={() => {
+                        console.log("buffering....");
+                    }}
+                    onEnded={() => {
+                        console.log("video ended....");
+                    }}
+                />
+                {/* <iframe allowFullScreen src={this.getMp4()} frameBorder="0"  scrolling="no" height="100%" width="100%" /> */}
 
                 <div className="player-bar">
                     <div className="player-info-left">
@@ -145,7 +163,9 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(video);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(video)
+);

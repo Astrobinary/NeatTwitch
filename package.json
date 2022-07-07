@@ -13,7 +13,7 @@
         "http2": "^3.3.7",
         "immutability-helper": "^2.9.1",
         "install": "^0.12.2",
-        "moment": "^2.24.0",
+        "moment": "^2.29.4",
         "node-sass": "^4.10.0",
         "npm": "^6.9.0",
         "react": "^16.8.5",
